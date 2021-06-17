@@ -32,6 +32,7 @@ executable pong
     Pong.Arena
     Pong.Paddle
     Pong.Ball
+    Pong.Pitch
     Pong.Universe
   -- other-extensions:
   build-depends:

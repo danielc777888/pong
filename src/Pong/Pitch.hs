@@ -1,7 +1,7 @@
 
 module Pong.Pitch where
 
-type Pitch = SpriteSheet
+import Core.Universe
 
-pitch :: Pitch
-pitch = "pitch"
+spriteSheet :: SpriteSheet
+spriteSheet = "pitch"
