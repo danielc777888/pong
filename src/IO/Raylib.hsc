@@ -4,7 +4,7 @@
 --TODO: Add mouse support
 
 {-# LANGUAGE ForeignFunctionInterface #-}
-module Raylib (
+module IO.Raylib (
  Texture2D,
  Font (Font),
  Sound,
