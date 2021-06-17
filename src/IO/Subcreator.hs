@@ -68,10 +68,10 @@ initWindow t o rs = do R.initWindow (fst o) (snd o) t
 exist :: W.World -> ArtMap -> IO ()
 exist w (tm, fm, sm, mm) = do done <- R.windowShouldClose
                               if not done
-                              then do as <- acts
-                                      let w' = W.think w as
-                                      audio w' as sm mm
-                                      visual w' as tm fm
+                              then do ts <- tactiles
+                                      let w' = W.think w ts
+                                      audio w' ts sm mm
+                                      visuals w' ts tm fm
                                       exist w' (tm, fm, sm, mm)
                               else do extinctionLevelEvent
 
@@ -111,11 +111,11 @@ soundPlayer p as sm = do let j = W.Jump `elem` as
                          if j then R.playSound (findArt "sound" sm) else return ()
 
 --draw allW. visuals
-visual :: W.World -> [W.Act] -> TextureMap -> FontMap -> IO ()
-visual w as tm fm  =  do R.beginDrawing
-                         drawBackground (W.background w) tm
-                         drawPlayer (W.player w) tm fm
-                         R.endDrawing
+visuals :: W.World -> [W.Act] -> TextureMap -> FontMap -> IO ()
+visuals w as tm fm  =  do R.beginDrawing
+                          drawBackground (W.background w) tm
+                          drawPlayer (W.player w) tm fm
+                          R.endDrawing
 
 drawBackground :: W.Background -> TextureMap -> IO ()
 drawBackground (W.Background p sf) tm = do  --R.traceLog R.Info $ "BACKGROUND scale factor " ++ show sf
@@ -131,10 +131,10 @@ drawPlayer p tm fm = do drawTexture' (findArt "paddle" tm) (W.pRect p) (W.pPosit
 
 --actions of player
 --TODO: There must be a more elegant way to do this
-acts :: IO [W.Act]
-acts = do s <- R.isKeyPressed R.Space
-          lc <- R.isKeyPressed R.LControl
-          return $ (if s then [W.Jump] else []) ++ (if lc then [W.Attack] else [])
+tactiles :: IO [W.Act]
+tactiles = do s <- R.isKeyPressed R.Space
+              lc <- R.isKeyPressed R.LControl
+              return $ (if s then [W.Jump] else []) ++ (if lc then [W.Attack] else [])
 
 findArt :: String -> M.Map String (Ptr a) -> Ptr a
 findArt k m = fromJust (M.lookup k m)
