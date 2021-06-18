@@ -3,7 +3,6 @@
 --TODO: More keyboardkey enums
 --TODO: Add mouse support
 
-{-# LANGUAGE ForeignFunctionInterface #-}
 module IO.Raylib (
  Texture2D,
  Font (Font),
