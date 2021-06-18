@@ -1,6 +1,6 @@
 module Pong.Ball where
 
-import Core.Universe
+import Core.Visual
 
 spriteSheet :: SpriteSheet
 spriteSheet = "ball"

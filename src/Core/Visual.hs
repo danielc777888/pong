@@ -6,6 +6,8 @@ import Core.Math
 type Resolution = (Nat, Nat)
 type ScaleFactor = Float
 type Position = (Int, Int)
+type SpriteSheet = String
+type FontFile = String
 
 
 selectResolution :: Resolution -> [Resolution] -> Resolution

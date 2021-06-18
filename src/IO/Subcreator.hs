@@ -5,10 +5,15 @@ module IO.Subcreator where
 import qualified Data.Map as M
 import Data.Maybe
 import Foreign.Ptr
+
 import qualified IO.Raylib as R
+
 import Core.Math
+import Core.Auditory
+import Core.Tactile
 import Core.Visual
 import Core.Universe
+
 import qualified Pong.World as W
 import Pong.Universe
 
@@ -30,13 +35,14 @@ supportedResolutions = [(425, 240), (1024, 576), (1152, 648), (1280, 720), (1600
 
 --subcreate world
 subcreate :: W.World -> Universe -> IO ()
-subcreate w u = do (w', am) <- begin w u
-                   exist w' am
+subcreate w u = do (w', u', am) <- begin w u
+                   exist w' u' am
                    end am
 
 --begin world, init, load and setup initial state
-begin :: W.World -> Universe -> IO (W.World, ArtMap)
-begin w u = do  r <- IO.Subcreator.initWindow (name u) (resolution u) supportedResolutions
+begin :: W.World -> Universe -> IO (W.World, Universe, ArtMap)
+begin w u = do  let r = resolution u
+                r' <- IO.Subcreator.initWindow (name u) r supportedResolutions
                 R.initAudioDevice
                 sss <- loadSpriteSheets (spriteSheets u)
                 ss <- loadSounds (sounds u)
@@ -44,8 +50,9 @@ begin w u = do  r <- IO.Subcreator.initWindow (name u) (resolution u) supportedR
                 fs <- loadFonts (fonts u)
                 R.toggleFullScreen
                 R.setTargetFPS fps
-                let w' = W.changeResolution w r
-                return (w', (sss, fs, ss, ms))
+                let w' = W.changeResolution w r'
+                let u' = u { Core.Universe.scaleFactor = Core.Visual.scaleFactor r r' }
+                return (w', u',  (sss, fs, ss, ms))
 
 --adjust to best resolution
 initWindow :: String -> Resolution -> [Resolution] -> IO Resolution
@@ -65,15 +72,15 @@ initWindow t o rs = do R.initWindow (fst o) (snd o) t
                        return r
 
 --main loop for existing world
-exist :: W.World -> ArtMap -> IO ()
-exist w (tm, fm, sm, mm) = do done <- R.windowShouldClose
-                              if not done
-                              then do ts <- tactiles
-                                      let w' = W.think w ts
-                                      audio w' ts sm mm
-                                      visuals w' ts tm fm
-                                      exist w' (tm, fm, sm, mm)
-                              else do extinctionLevelEvent
+exist :: W.World -> Universe -> ArtMap -> IO ()
+exist w u (tm, fm, sm, mm) = do done <- R.windowShouldClose
+                                if not done
+                                then do ts <- tactiles
+                                        let w' = W.think w ts
+                                        audio w' ts sm mm
+                                        visuals w' ts tm fm
+                                        exist w' u (tm, fm, sm, mm)
+                                else do extinctionLevelEvent
 
 extinctionLevelEvent :: IO ()
 extinctionLevelEvent = return ()
@@ -103,16 +110,16 @@ loadMusic xs = do ts <- sequence [R.loadSound (artFolder ++ "music/" ++ x ++ ".o
                   return (M.fromList (zip xs ts))
 
 --play all audio, sounds and music
-audio :: W.World -> [W.Act] -> SoundMap -> MusicMap -> IO ()
-audio w as sm mm = do soundPlayer (W.player w) as sm
+audio :: W.World -> [Tactile] -> SoundMap -> MusicMap -> IO ()
+audio w ts sm mm = do soundPlayer (W.player w) ts sm
 
-soundPlayer :: W.Player -> [W.Act] -> SoundMap -> IO ()
-soundPlayer p as sm = do let j = W.Jump `elem` as
+soundPlayer :: W.Player -> [Tactile] -> SoundMap -> IO ()
+soundPlayer p ts sm = do let j = Core.Tactile.Space `elem` ts
                          if j then R.playSound (findArt "sound" sm) else return ()
 
 --draw allW. visuals
-visuals :: W.World -> [W.Act] -> TextureMap -> FontMap -> IO ()
-visuals w as tm fm  =  do R.beginDrawing
+visuals :: W.World -> [Tactile] -> TextureMap -> FontMap -> IO ()
+visuals w ts tm fm  =  do R.beginDrawing
                           drawBackground (W.background w) tm
                           drawPlayer (W.player w) tm fm
                           R.endDrawing
@@ -131,10 +138,11 @@ drawPlayer p tm fm = do drawTexture' (findArt "paddle" tm) (W.pRect p) (W.pPosit
 
 --actions of player
 --TODO: There must be a more elegant way to do this
-tactiles :: IO [W.Act]
+--TODO: Should be a Set data structure
+tactiles :: IO [Tactile]
 tactiles = do s <- R.isKeyPressed R.Space
               lc <- R.isKeyPressed R.LControl
-              return $ (if s then [W.Jump] else []) ++ (if lc then [W.Attack] else [])
+              return $ (if s then [Core.Tactile.Space] else []) ++ (if lc then [Core.Tactile.LControl] else [])
 
 findArt :: String -> M.Map String (Ptr a) -> Ptr a
 findArt k m = fromJust (M.lookup k m)

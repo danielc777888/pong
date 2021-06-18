@@ -1,6 +1,6 @@
 module Pong.Arena where
 
-import Core.Universe
+import Core.Visual
 
 import Pong.Ball
 import Pong.Paddle

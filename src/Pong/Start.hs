@@ -1,6 +1,6 @@
 module Pong.Start where
 
-import Core.Universe
+import Core.Visual
 
 spriteSheet :: SpriteSheet
 spriteSheet = "start"

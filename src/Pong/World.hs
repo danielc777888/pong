@@ -3,6 +3,8 @@
 module Pong.World where
 
 import Core.Visual
+import Core.Auditory
+import Core.Tactile
 import Core.Universe
 
 
@@ -59,16 +61,16 @@ world = World { Pong.World.resolution = originalResolution
        background = Background (0, 0) (1.0, 1.0)
         
 --thinking section, changing of world
-think :: World -> [Act] -> World
-think w as = w {player = p'}
-             where p' = thinkPlayer (player w) as
+think :: World -> [Tactile] -> World
+think w ts = w {player = p'}
+             where p' = thinkPlayer (player w) ts
 
-thinkPlayer :: Player -> [Act] -> Player
-thinkPlayer p as = if Jump `elem` as then p {pState = Jumping} else p
+thinkPlayer :: Player -> [Tactile] -> Player
+thinkPlayer p ts = if Core.Tactile.Space `elem` ts then p {pState = Jumping} else p
 
 changeResolution :: World -> Resolution -> World
 changeResolution w r' = if (originalResolution == r') then w  else w { Pong.World.resolution = r', wScaleFactor = sf', player = p', background = b' }
-                                       where sf' = scaleFactor (Pong.World.resolution w) r'
+                                       where sf' = Core.Visual.scaleFactor (Pong.World.resolution w) r'
                                              p' = scalePlayer (player w) sf'
                                              b' = scaleBackground (background w) sf'
                                         

@@ -1,7 +1,7 @@
 
 module Pong.Pitch where
 
-import Core.Universe
+import Core.Visual
 
 spriteSheet :: SpriteSheet
 spriteSheet = "pitch"

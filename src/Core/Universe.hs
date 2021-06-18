@@ -1,15 +1,14 @@
 module Core.Universe where
 
+import Core.Existent
+import Core.Auditory
 import Core.Visual
 
-type SpriteSheet = String
-type SoundFile = String
-type FontFile = String
-type MusicFile = String
-
 data Universe = Universe {
-     name :: String,
+     name :: Name,
      resolution :: Resolution,
+     adaptedResolution :: Resolution,
+     scaleFactor :: (ScaleFactor, ScaleFactor),
      spriteSheets :: [SpriteSheet],
      fonts :: [FontFile],
      sounds :: [SoundFile],
