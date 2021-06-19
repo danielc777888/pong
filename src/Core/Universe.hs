@@ -15,5 +15,6 @@ data Universe = Universe {
      sounds :: [SoundFile],
      music :: [MusicFile],
      think :: Universe -> [Tactile] -> Universe,
-     playSounds :: [SoundFile]
+     playSounds :: [SoundFile],
+     drawSprites :: [Sprite]
     }

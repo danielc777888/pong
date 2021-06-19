@@ -1,5 +1,7 @@
 --Reify world using raylib
-module IO.Subcreator where
+module IO.Subcreator(
+    subcreate
+) where
 
 import qualified Data.Map as M
 import Data.Maybe
@@ -111,21 +113,15 @@ audio u sm mm = do sequence_ [playSound (findArt s sm) | s <- playSounds u]
 
 visuals :: Universe -> TextureMap -> FontMap -> IO ()
 visuals u tm fm  =  do beginDrawing
-                          --drawBackground (W.background w) tm
-                          --drawPlayer (W.player w) tm fm
+                       sequence_ [drawSprite s tm (Core.Universe.scaleFactor u) | s <- drawSprites u]
                        endDrawing
 
--- drawBackground :: W.Background -> TextureMap -> IO ()
--- drawBackground (W.Background p sf) tm = do  --R.traceLog R.Info $ "BACKGROUND scale factor " ++ show sf
---                                             --R.traceLog R.Info $ "BACKGROUND position " ++ show p
---                                             --drawTexture (findArt "pitch" tm) p (snd sf)
---                                              drawTexturePro (findArt "pitch" tm) (IO.Raylib.Rectangle 0 0 425 240) (IO.Raylib.Rectangle (fromIntegral 0) (fromIntegral 0) x' y') (IO.Raylib.Vector2 0 0) 0.0 white
---                                              where x' = realToFrac (425 * (fst sf))
---                                                    y' = realToFrac (240 * (snd sf))
-
--- drawPlayer :: W.Player -> TextureMap -> FontMap -> IO ()
--- drawPlayer p tm fm = do drawTexture' (findArt "paddle" tm) (W.pRect p) (W.pPosition p) (W.pScaleFactor p)
---                                               --drawText (findArt f fm) "This is my first text" p s
+drawSprite :: Sprite -> TextureMap -> (ScaleFactor, ScaleFactor) -> IO ()
+drawSprite s tm sf = do drawTexturePro a sr dr (IO.Raylib.Vector2 0 0) 0.0 white
+                        where d = dimensions s
+                              sr = toRectangle (sourcePosition s) d (1.0, 1.0)
+                              dr = toRectangle (targetPosition s) d sf
+                              a = findArt (spriteSheet s) tm
 
 --actions of player
 --TODO: There must be a more elegant way to do this
@@ -138,20 +134,18 @@ tactiles = do s <- isKeyPressed IO.Raylib.Space
 findArt :: String -> M.Map String (Ptr a) -> Ptr a
 findArt k m = fromJust (M.lookup k m)
 
-drawTexture :: Ptr Texture2D -> Position -> ScaleFactor -> IO ()
-drawTexture t (x, y) s = do drawTextureEx t (Vector2 (fromIntegral x) (fromIntegral y)) 0.0 s white
-
--- drawTexture' :: Ptr Texture2D -> W.Rectangle -> Position -> (ScaleFactor, ScaleFactor) -> IO ()
--- drawTexture' t r (x, y) (w, h) = do IO.Raylib.drawTexturePro t (IO.Raylib.Rectangle 0 0 10 26) (IO.Raylib.Rectangle (fromIntegral x) (fromIntegral y) x' y') (Vector2 0 0) 0.0 white
---                                    where x' = realToFrac (10 * w)
---                                          y' = realToFrac (26 * h)
-
--- fromRec :: W.Rectangle -> IO.Raylib.Rectangle
--- fromRec (W.Rectangle (x, y) (x', y')) = IO.Raylib.Rectangle (fromIntegral x) (fromIntegral y) (fromIntegral x') (fromIntegral y')
-
+toRectangle :: Position -> Dimensions -> (ScaleFactor, ScaleFactor) -> IO.Raylib.Rectangle
+toRectangle (x, y) (w, h) (s1, s2) = IO.Raylib.Rectangle (realToFrac x') (realToFrac y') (realToFrac w') (realToFrac h')
+                                     where (w', h') = scaleDimensions (w, h) (s1, s2)
+                                           (x', y') = translatePosition (x, y) (s1, s2)
 
 drawText :: Ptr Font -> String -> Position -> ScaleFactor -> IO ()
 drawText f s (x, y) sf = do bs <- baseSize f
                             drawTextEx f s (IO.Raylib.Vector2 (fromIntegral x) (fromIntegral y)) (fromIntegral bs * sf) sf white
 
 
+translatePosition :: Position -> (ScaleFactor, ScaleFactor) -> (Float, Float)
+translatePosition (x, y) (ws, hs) = (fromIntegral x * ws, fromIntegral y * hs)
+
+scaleDimensions :: Dimensions -> (ScaleFactor, ScaleFactor) -> (Float, Float)
+scaleDimensions (w, h) (ws, hs) = (fromIntegral w * ws, fromIntegral h * hs)

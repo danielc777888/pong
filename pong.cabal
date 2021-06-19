@@ -30,7 +30,6 @@ executable pong
     Core.Universe
     IO.Raylib
     IO.Subcreator
-    Pong.World
     Pong.Start
     Pong.Arena
     Pong.Paddle

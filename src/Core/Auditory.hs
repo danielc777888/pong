@@ -1,5 +1,7 @@
 
 module Core.Auditory where
 
-type SoundFile = String
-type MusicFile = String
+import Core.Existent
+
+type SoundFile = Name
+type MusicFile = Name
