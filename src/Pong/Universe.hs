@@ -16,8 +16,9 @@ universe = Universe {
     fonts = ["alagard"],
     sounds = ["sound"],
     music =  ["target"],
-    Core.Universe.think = Pong.Universe.think    
+    Core.Universe.think = Pong.Universe.think,
+    playSounds = []
 }
 
 think :: Universe -> [Tactile] -> Universe
-think = undefined
+think u ts = if Space `elem` ts then u { playSounds = ["sound"] } else u { playSounds = [] }

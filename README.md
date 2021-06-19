@@ -6,7 +6,6 @@ The venerable pong
 * Currently haskells base/standard libs : https://downloads.haskell.org/ghc/latest/docs/html/users_guide/8.10.1-notes.html#ghc-library
 * Main -> (IO, Pong) , Pong -> Core, IO -> Core
 
-
 ## Building/Running
 
 * Build/install raylib as SHARED library. https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux

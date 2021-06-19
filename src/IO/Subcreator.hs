@@ -1,12 +1,10 @@
 --Reify world using raylib
---must not depend on pong stuff
 module IO.Subcreator where
 
 import qualified Data.Map as M
 import Data.Maybe
 import Foreign.Ptr
 
---import qualified IO.Raylib as R
 import IO.Raylib
 
 import Core.Math
@@ -14,9 +12,6 @@ import Core.Auditory
 import Core.Tactile
 import Core.Visual
 import Core.Universe
-
-import qualified Pong.World as W
-import Pong.Universe
 
 --type synonyms
 type ArtMap = (TextureMap, FontMap, SoundMap, MusicMap)
@@ -35,14 +30,14 @@ supportedResolutions :: [Resolution]
 supportedResolutions = [(425, 240), (1024, 576), (1152, 648), (1280, 720), (1600, 900), (1920, 1080)]
 
 --subcreate world
-subcreate :: W.World -> Universe -> IO ()
-subcreate w u = do (w', u', am) <- begin w u
-                   exist w' u' am
-                   end am
+subcreate :: Universe -> IO ()
+subcreate u = do (u', am) <- begin u
+                 exist u' am
+                 end am
 
 --begin world, init, load and setup initial state
-begin :: W.World -> Universe -> IO (W.World, Universe, ArtMap)
-begin w u = do  let r = resolution u
+begin :: Universe -> IO (Universe, ArtMap)
+begin u = do    let r = resolution u
                 r' <- IO.Subcreator.initWindow (name u) r supportedResolutions
                 initAudioDevice
                 sss <- loadSpriteSheets (spriteSheets u)
@@ -51,9 +46,8 @@ begin w u = do  let r = resolution u
                 fs <- loadFonts (fonts u)
                 toggleFullScreen
                 setTargetFPS fps
-                let w' = W.changeResolution w r'
                 let u' = u { Core.Universe.scaleFactor = Core.Visual.scaleFactor r r' }
-                return (w', u',  (sss, fs, ss, ms))
+                return (u',  (sss, fs, ss, ms))
 
 --adjust to best resolution
 initWindow :: String -> Resolution -> [Resolution] -> IO Resolution
@@ -74,15 +68,14 @@ initWindow t o rs = do IO.Raylib.initWindow (fst o) (snd o) t
                        return r
 
 --main loop for existing world
-exist :: W.World -> Universe -> ArtMap -> IO ()
-exist w u (tm, fm, sm, mm) = do done <- windowShouldClose
+exist :: Universe -> ArtMap -> IO ()
+exist u (tm, fm, sm, mm) = do   done <- windowShouldClose
                                 if not done
                                 then do ts <- tactiles
-                                        let w' = W.think w ts
                                         let u' = (Core.Universe.think u) u ts
-                                        audio w' ts sm mm
-                                        visuals w' ts tm fm
-                                        exist w' u (tm, fm, sm, mm)
+                                        audio u' sm mm
+                                        visuals u' tm fm
+                                        exist u' (tm, fm, sm, mm)
                                 else do extinctionLevelEvent
 
 extinctionLevelEvent :: IO ()
@@ -113,31 +106,26 @@ loadMusic xs = do ts <- sequence [loadSound (artFolder ++ "music/" ++ x ++ ".ogg
                   return (M.fromList (zip xs ts))
 
 --play all audio, sounds and music
-audio :: W.World -> [Tactile] -> SoundMap -> MusicMap -> IO ()
-audio w ts sm mm = do soundPlayer (W.player w) ts sm
+audio :: Universe -> SoundMap -> MusicMap -> IO ()
+audio u sm mm = do sequence_ [playSound (findArt s sm) | s <- playSounds u]
 
-soundPlayer :: W.Player -> [Tactile] -> SoundMap -> IO ()
-soundPlayer p ts sm = do let j = Core.Tactile.Space `elem` ts
-                         if j then playSound (findArt "sound" sm) else return ()
+visuals :: Universe -> TextureMap -> FontMap -> IO ()
+visuals u tm fm  =  do beginDrawing
+                          --drawBackground (W.background w) tm
+                          --drawPlayer (W.player w) tm fm
+                       endDrawing
 
---draw allW. visuals
-visuals :: W.World -> [Tactile] -> TextureMap -> FontMap -> IO ()
-visuals w ts tm fm  =  do beginDrawing
-                          drawBackground (W.background w) tm
-                          drawPlayer (W.player w) tm fm
-                          endDrawing
+-- drawBackground :: W.Background -> TextureMap -> IO ()
+-- drawBackground (W.Background p sf) tm = do  --R.traceLog R.Info $ "BACKGROUND scale factor " ++ show sf
+--                                             --R.traceLog R.Info $ "BACKGROUND position " ++ show p
+--                                             --drawTexture (findArt "pitch" tm) p (snd sf)
+--                                              drawTexturePro (findArt "pitch" tm) (IO.Raylib.Rectangle 0 0 425 240) (IO.Raylib.Rectangle (fromIntegral 0) (fromIntegral 0) x' y') (IO.Raylib.Vector2 0 0) 0.0 white
+--                                              where x' = realToFrac (425 * (fst sf))
+--                                                    y' = realToFrac (240 * (snd sf))
 
-drawBackground :: W.Background -> TextureMap -> IO ()
-drawBackground (W.Background p sf) tm = do  --R.traceLog R.Info $ "BACKGROUND scale factor " ++ show sf
-                                            --R.traceLog R.Info $ "BACKGROUND position " ++ show p
-                                            --drawTexture (findArt "pitch" tm) p (snd sf)
-                                             drawTexturePro (findArt "pitch" tm) (IO.Raylib.Rectangle 0 0 425 240) (IO.Raylib.Rectangle (fromIntegral 0) (fromIntegral 0) x' y') (IO.Raylib.Vector2 0 0) 0.0 white
-                                             where x' = realToFrac (425 * (fst sf))
-                                                   y' = realToFrac (240 * (snd sf))
-
-drawPlayer :: W.Player -> TextureMap -> FontMap -> IO ()
-drawPlayer p tm fm = do drawTexture' (findArt "paddle" tm) (W.pRect p) (W.pPosition p) (W.pScaleFactor p)
-                                              --drawText (findArt f fm) "This is my first text" p s
+-- drawPlayer :: W.Player -> TextureMap -> FontMap -> IO ()
+-- drawPlayer p tm fm = do drawTexture' (findArt "paddle" tm) (W.pRect p) (W.pPosition p) (W.pScaleFactor p)
+--                                               --drawText (findArt f fm) "This is my first text" p s
 
 --actions of player
 --TODO: There must be a more elegant way to do this
@@ -153,13 +141,13 @@ findArt k m = fromJust (M.lookup k m)
 drawTexture :: Ptr Texture2D -> Position -> ScaleFactor -> IO ()
 drawTexture t (x, y) s = do drawTextureEx t (Vector2 (fromIntegral x) (fromIntegral y)) 0.0 s white
 
-drawTexture' :: Ptr Texture2D -> W.Rectangle -> Position -> (ScaleFactor, ScaleFactor) -> IO ()
-drawTexture' t r (x, y) (w, h) = do IO.Raylib.drawTexturePro t (IO.Raylib.Rectangle 0 0 10 26) (IO.Raylib.Rectangle (fromIntegral x) (fromIntegral y) x' y') (Vector2 0 0) 0.0 white
-                                   where x' = realToFrac (10 * w)
-                                         y' = realToFrac (26 * h)
+-- drawTexture' :: Ptr Texture2D -> W.Rectangle -> Position -> (ScaleFactor, ScaleFactor) -> IO ()
+-- drawTexture' t r (x, y) (w, h) = do IO.Raylib.drawTexturePro t (IO.Raylib.Rectangle 0 0 10 26) (IO.Raylib.Rectangle (fromIntegral x) (fromIntegral y) x' y') (Vector2 0 0) 0.0 white
+--                                    where x' = realToFrac (10 * w)
+--                                          y' = realToFrac (26 * h)
 
-fromRec :: W.Rectangle -> IO.Raylib.Rectangle
-fromRec (W.Rectangle (x, y) (x', y')) = IO.Raylib.Rectangle (fromIntegral x) (fromIntegral y) (fromIntegral x') (fromIntegral y')
+-- fromRec :: W.Rectangle -> IO.Raylib.Rectangle
+-- fromRec (W.Rectangle (x, y) (x', y')) = IO.Raylib.Rectangle (fromIntegral x) (fromIntegral y) (fromIntegral x') (fromIntegral y')
 
 
 drawText :: Ptr Font -> String -> Position -> ScaleFactor -> IO ()
