@@ -11,10 +11,16 @@ import Core.Math
 
 import Pong.Arena
 import Pong.Start
+import Pong.Paddle
 
-universe :: Universe
+data PongUniverse = PongUniverse {
+    arena :: Arena
+}
+
+universe :: Universe PongUniverse
 universe = Universe {
     name = "pong",
+    fps = 60,
     resolution = (425, 240),
     adaptedResolution = (425, 240),
     Core.Universe.scaleFactor = (1.0, 1.0),
@@ -24,39 +30,28 @@ universe = Universe {
     music =  ["target"],
     Core.Universe.think = Pong.Universe.think,
     playSounds = [],
-    drawSprites = []
+    drawSprites = [],
+    gameState = PongUniverse {Pong.Universe.arena = Pong.Arena.arena}
 }
 
-think :: Universe -> [Tactile] -> Universe
-think u ts = u { playSounds = soundsToPlay ts, drawSprites = spritesToDraw }
+think :: Universe PongUniverse -> [Tactile] -> Universe PongUniverse
+think u ts = u { playSounds = soundsToPlay ts, drawSprites = spritesToDraw gs, gameState = PongUniverse {Pong.Universe.arena = Pong.Arena.think (Pong.Universe.arena gs) ts}}
+                where gs = gameState u
+    
+    
+             --where pu = Pong.Paddle.think u ts
 
 soundsToPlay :: [Tactile] -> [SoundFile]
 soundsToPlay [] = []
 soundsToPlay ts = if Space `elem` ts then ["sound"] else []
 
-spritesToDraw :: [Sprite]
-spritesToDraw = [pitch, lPaddle, rPaddle]
+spritesToDraw :: PongUniverse -> [Sprite]
+spritesToDraw  u = [pitch, Pong.Paddle.toSprite lPaddle, Pong.Paddle.toSprite rp]
+                 where a = Pong.Universe.arena u
+                       rp = rPaddle a
 
 pitch :: Sprite
 pitch = Sprite { Core.Visual.spriteSheet = "pitch",
  sourcePosition = Vector {x = 0, y = 0},
  targetPosition = Vector {x = 0, y = 0},
  dimensions =  (425, 240) }
-
-
-lPaddle :: Sprite
-lPaddle =  Sprite {
-    Core.Visual.spriteSheet = "paddle",
-    sourcePosition = Vector {x = 0, y = 0},
-    targetPosition = Vector {x = 5, y = 100},
-    dimensions =  (10, 26)
- }
-
-rPaddle :: Sprite
-rPaddle =  Sprite {
-    Core.Visual.spriteSheet = "paddle",
-    sourcePosition = Vector {x = 0, y = 0},
-    targetPosition = Vector {x = 410, y = 100},
-    dimensions =  (10, 26)
- }
-

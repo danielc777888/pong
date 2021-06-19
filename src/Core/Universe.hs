@@ -4,9 +4,11 @@ import Core.Existent
 import Core.Auditory
 import Core.Visual
 import Core.Tactile
+import Core.Math
 
-data Universe = Universe {
+data Universe a = Universe {
      name :: Name,
+     fps :: Nat,
      resolution :: Resolution,
      adaptedResolution :: Resolution,
      scaleFactor :: (ScaleFactor, ScaleFactor),
@@ -14,7 +16,8 @@ data Universe = Universe {
      fonts :: [FontFile],
      sounds :: [SoundFile],
      music :: [MusicFile],
-     think :: Universe -> [Tactile] -> Universe,
+     think :: Universe a -> [Tactile] -> Universe a,
      playSounds :: [SoundFile],
-     drawSprites :: [Sprite]
-    }
+     drawSprites :: [Sprite],
+     gameState :: a
+}

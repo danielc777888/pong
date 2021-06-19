@@ -27,6 +27,7 @@ module IO.Raylib (
  setTargetFPS,
  --core input
  isKeyPressed,
+ isKeyDown,
  --core misc
  traceLog,
  --textures loading
@@ -338,6 +339,10 @@ isKeyPressed :: KeyboardKey -> IO Bool
 isKeyPressed k = do p <- c_isKeyPressed (fromIntegral (fromEnum k))
                     return (toBool p)
 
+foreign import ccall unsafe "raylib.h IsKeyDown" c_isKeyDown :: CInt -> IO CBool
+isKeyDown :: KeyboardKey -> IO Bool
+isKeyDown k = do p <- c_isKeyDown (fromIntegral (fromEnum k))
+                 return (toBool p)
 --core misc
 foreign import ccall unsafe "raylib.h TraceLog" c_traceLog :: CInt -> CString -> IO ()
 traceLog :: TraceLogType -> String -> IO ()

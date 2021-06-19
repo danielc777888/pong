@@ -25,20 +25,17 @@ type MusicMap = M.Map String (Ptr Sound)
 artFolder :: String
 artFolder = "art/"
 
-fps :: Nat
-fps = 12
-
 supportedResolutions :: [Resolution]
 supportedResolutions = [(425, 240), (1024, 576), (1152, 648), (1280, 720), (1600, 900), (1920, 1080)]
 
 --subcreate world
-subcreate :: Universe -> IO ()
+subcreate :: Universe a -> IO ()
 subcreate u = do (u', am) <- begin u
                  exist u' am
                  end am
 
 --begin world, init, load and setup initial state
-begin :: Universe -> IO (Universe, ArtMap)
+begin :: Universe a -> IO (Universe a, ArtMap)
 begin u = do    let r = resolution u
                 r' <- IO.Subcreator.initWindow (name u) r supportedResolutions
                 initAudioDevice
@@ -47,7 +44,7 @@ begin u = do    let r = resolution u
                 ms <- loadMusic (music u)
                 fs <- loadFonts (fonts u)
                 toggleFullScreen
-                setTargetFPS fps
+                setTargetFPS (fps u)
                 let u' = u { Core.Universe.scaleFactor = Core.Visual.scaleFactor r r' }
                 return (u',  (sss, fs, ss, ms))
 
@@ -70,7 +67,7 @@ initWindow t o rs = do IO.Raylib.initWindow (fst o) (snd o) t
                        return r
 
 --main loop for existing world
-exist :: Universe -> ArtMap -> IO ()
+exist :: Universe a -> ArtMap -> IO ()
 exist u (tm, fm, sm, mm) = do   done <- windowShouldClose
                                 if not done
                                 then do ts <- tactiles
@@ -108,10 +105,10 @@ loadMusic xs = do ts <- sequence [loadSound (artFolder ++ "music/" ++ x ++ ".ogg
                   return (M.fromList (zip xs ts))
 
 --play all audio, sounds and music
-audio :: Universe -> SoundMap -> MusicMap -> IO ()
+audio :: Universe a -> SoundMap -> MusicMap -> IO ()
 audio u sm mm = do sequence_ [playSound (findArt s sm) | s <- playSounds u]
 
-visuals :: Universe -> TextureMap -> FontMap -> IO ()
+visuals :: Universe a -> TextureMap -> FontMap -> IO ()
 visuals u tm fm  =  do beginDrawing
                        sequence_ [drawSprite s tm (Core.Universe.scaleFactor u) | s <- drawSprites u]
                        endDrawing
@@ -129,7 +126,9 @@ drawSprite s tm sf = do drawTexturePro a sr dr (IO.Raylib.Vector2 0 0) 0.0 white
 tactiles :: IO [Tactile]
 tactiles = do s <- isKeyPressed IO.Raylib.Space
               lc <- isKeyPressed IO.Raylib.LControl
-              return $ (if s then [Core.Tactile.Space] else []) ++ (if lc then [Core.Tactile.LControl] else [])
+              u <- isKeyDown IO.Raylib.Up
+              d <- isKeyDown IO.Raylib.Down
+              return $ (if s then [Core.Tactile.Space] else []) ++ (if lc then [Core.Tactile.LControl] else []) ++ (if u then [Core.Tactile.Up] else []) ++ (if d then [Core.Tactile.Down] else [])
 
 findArt :: String -> M.Map String (Ptr a) -> Ptr a
 findArt k m = fromJust (M.lookup k m)

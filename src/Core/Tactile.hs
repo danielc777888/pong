@@ -2,5 +2,7 @@
 module Core.Tactile where
 
 data Tactile = Space
-              | LControl deriving (Show, Eq)
+              | LControl 
+              | Up
+              | Down deriving (Show, Eq)
 
