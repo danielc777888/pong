@@ -135,17 +135,17 @@ findArt :: String -> M.Map String (Ptr a) -> Ptr a
 findArt k m = fromJust (M.lookup k m)
 
 toRectangle :: Position -> Dimensions -> (ScaleFactor, ScaleFactor) -> IO.Raylib.Rectangle
-toRectangle (x, y) (w, h) (s1, s2) = IO.Raylib.Rectangle (realToFrac x') (realToFrac y') (realToFrac w') (realToFrac h')
+toRectangle p (w, h) (s1, s2) = IO.Raylib.Rectangle (realToFrac x') (realToFrac y') (realToFrac w') (realToFrac h')
                                      where (w', h') = scaleDimensions (w, h) (s1, s2)
-                                           (x', y') = translatePosition (x, y) (s1, s2)
+                                           (x', y') = translatePosition p (s1, s2)
 
 drawText :: Ptr Font -> String -> Position -> ScaleFactor -> IO ()
-drawText f s (x, y) sf = do bs <- baseSize f
-                            drawTextEx f s (IO.Raylib.Vector2 (fromIntegral x) (fromIntegral y)) (fromIntegral bs * sf) sf white
+drawText f s p sf = do bs <- baseSize f
+                       drawTextEx f s (IO.Raylib.Vector2 (fromIntegral (x p)) (fromIntegral (y p))) (fromIntegral bs * sf) sf white
 
 
 translatePosition :: Position -> (ScaleFactor, ScaleFactor) -> (Float, Float)
-translatePosition (x, y) (ws, hs) = (fromIntegral x * ws, fromIntegral y * hs)
+translatePosition p (ws, hs) = (fromIntegral (x p) * ws, fromIntegral (y p) * hs)
 
 scaleDimensions :: Dimensions -> (ScaleFactor, ScaleFactor) -> (Float, Float)
 scaleDimensions (w, h) (ws, hs) = (fromIntegral w * ws, fromIntegral h * hs)

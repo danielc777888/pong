@@ -6,7 +6,7 @@ import Core.Existent
 
 type Resolution = (Nat, Nat)
 type ScaleFactor = Float
-type Position = (Int, Int)
+type Position = Vector
 type Dimensions = (Nat, Nat)
 type SpriteSheet = Name
 type FontFile = Name
