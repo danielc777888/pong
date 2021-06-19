@@ -2,6 +2,7 @@
 --TODO: Remove unecessary function bindings, eg. drawTexture as drawTextureEx is being used
 --TODO: More keyboardkey enums
 --TODO: Add mouse support
+--TODO: Variadic argument support for traceLog
 
 module IO.Raylib (
  Texture2D,

@@ -2,7 +2,7 @@
 module Pong.Universe where
 
 import Core.Universe
-
+import Core.Tactile
 import Pong.Arena
 import Pong.Start
 
@@ -15,5 +15,9 @@ universe = Universe {
     Core.Universe.spriteSheets = Pong.Arena.spriteSheets ++ [Pong.Start.spriteSheet],
     fonts = ["alagard"],
     sounds = ["sound"],
-    music =  ["target"]    
+    music =  ["target"],
+    Core.Universe.think = Pong.Universe.think    
 }
+
+think :: Universe -> [Tactile] -> Universe
+think = undefined

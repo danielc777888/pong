@@ -3,6 +3,7 @@ module Core.Universe where
 import Core.Existent
 import Core.Auditory
 import Core.Visual
+import Core.Tactile
 
 data Universe = Universe {
      name :: Name,
@@ -12,5 +13,6 @@ data Universe = Universe {
      spriteSheets :: [SpriteSheet],
      fonts :: [FontFile],
      sounds :: [SoundFile],
-     music :: [MusicFile]
+     music :: [MusicFile],
+     think :: Universe -> [Tactile] -> Universe
     }
