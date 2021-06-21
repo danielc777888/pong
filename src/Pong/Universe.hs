@@ -3,6 +3,8 @@ module Pong.Universe(
     universe
 ) where
 
+import qualified Data.Set as S
+
 import Core.Universe
 import Core.Tactile
 import Core.Visual
@@ -34,16 +36,15 @@ universe = Universe {
     gameState = PongUniverse {Pong.Universe.arena = Pong.Arena.arena}
 }
 
-think :: Universe PongUniverse -> [Tactile] -> Universe PongUniverse
+think :: Universe PongUniverse -> Tactile -> Universe PongUniverse
 think u ts = u { playSounds = soundsToPlay ts, drawSprites = spritesToDraw gs, gameState = PongUniverse {Pong.Universe.arena = Pong.Arena.think (Pong.Universe.arena gs) ts}}
                 where gs = gameState u
     
     
              --where pu = Pong.Paddle.think u ts
 
-soundsToPlay :: [Tactile] -> [SoundFile]
-soundsToPlay [] = []
-soundsToPlay ts = if Space `elem` ts then ["sound"] else []
+soundsToPlay :: Tactile -> [SoundFile]
+soundsToPlay ts = if S.member Key_Space (keysPressed ts) then ["sound"] else []
 
 spritesToDraw :: PongUniverse -> [Sprite]
 spritesToDraw  u = [pitch, Pong.Paddle.toSprite lPaddle, Pong.Paddle.toSprite rp]

@@ -6,6 +6,8 @@ module Pong.Paddle(
     move
 ) where
 
+import qualified Data.Set as S
+
 import Core.Math
 import Core.Visual
 import Core.Existent
@@ -40,10 +42,11 @@ toSprite p = Sprite {
     dimensions =  paddleDimensions p
 }
 
-move :: Paddle -> [Tactile] -> Paddle
+move :: Paddle -> Tactile -> Paddle
 move p ts
-    | Up `elem` ts = p { paddleTargetPosition = moveUp (paddleTargetPosition p)}
-    | Down `elem` ts = p { paddleTargetPosition = moveDown (paddleTargetPosition p)}
+    -- | touched Key_Up ts
+    | S.member Key_Up  (keysPressed ts) || S.member Key_Up  (keysDown ts) = p { paddleTargetPosition = moveUp (paddleTargetPosition p)}
+    | S.member Key_Down (keysPressed ts) || S.member Key_Down  (keysDown ts) = p { paddleTargetPosition = moveDown (paddleTargetPosition p)}
     | otherwise = p
 
 moveUp :: Position -> Position

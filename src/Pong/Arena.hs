@@ -18,7 +18,7 @@ data Arena = Arena {
     rPaddle :: Paddle
 }
 
-think :: Arena -> [Tactile] -> Arena
+think :: Arena -> Tactile -> Arena
 think a ts = a { rPaddle = move rp ts}
               where rp = rPaddle a
 

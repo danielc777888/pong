@@ -16,7 +16,7 @@ data Universe a = Universe {
      fonts :: [FontFile],
      sounds :: [SoundFile],
      music :: [MusicFile],
-     think :: Universe a -> [Tactile] -> Universe a,
+     think :: Universe a -> Tactile -> Universe a,
      playSounds :: [SoundFile],
      drawSprites :: [Sprite],
      gameState :: a
