@@ -116,4 +116,7 @@ data KeyboardKey = Key_Null
                 | Key_Kp_Subtract
                 | Key_Kp_Add
                 | Key_Kp_Enter
-                | Key_Kp_Equal deriving (Show, Eq, Ord)
+                | Key_Kp_Equal deriving (Show, Eq, Ord, Enum)
+
+touchedKey :: KeyboardKey -> Set KeyboardKey -> Set KeyboardKey -> Bool
+touchedKey k sp sd = member k sp || member k sd

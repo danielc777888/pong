@@ -45,8 +45,8 @@ toSprite p = Sprite {
 move :: Paddle -> Tactile -> Paddle
 move p ts
     -- | touched Key_Up ts
-    | S.member Key_Up  (keysPressed ts) || S.member Key_Up  (keysDown ts) = p { paddleTargetPosition = moveUp (paddleTargetPosition p)}
-    | S.member Key_Down (keysPressed ts) || S.member Key_Down  (keysDown ts) = p { paddleTargetPosition = moveDown (paddleTargetPosition p)}
+    | touchedKey Key_Up (keysPressed ts) (keysDown ts) = p { paddleTargetPosition = moveUp (paddleTargetPosition p)}
+    | touchedKey Key_Down (keysPressed ts) (keysDown ts) = p { paddleTargetPosition = moveDown (paddleTargetPosition p)}
     | otherwise = p
 
 moveUp :: Position -> Position

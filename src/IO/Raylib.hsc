@@ -3,7 +3,6 @@
 --TODO: More keyboardkey enums
 --TODO: Add mouse support
 --TODO: Variadic argument support for traceLog
-
 module IO.Raylib (
  Texture2D,
  Font (Font),
@@ -419,6 +418,7 @@ instance Enum KeyboardKey where
   toEnum #{const KEY_KP_ADD} = Key_Kp_Add
   toEnum #{const KEY_KP_ENTER} = Key_Kp_Enter
   toEnum #{const KEY_KP_EQUAL} = Key_Kp_Equal
+  toEnum _ = error "no such value for KeyboardKey"
 
 data AudioStream = AudioStream (Ptr CInt) CUInt CUInt CUInt
 instance Storable AudioStream where
@@ -688,115 +688,16 @@ drawTextEx f_ptr t v fs s c = with c (\c_ptr ->
                                    with v (\v_ptr ->
                                         withCString t (\t' -> c_drawTextEx f_ptr t' v_ptr (realToFrac fs) (realToFrac s) c_ptr)))
 
---text auxiliary
+--auxillary functions
+--text
 baseSize :: Ptr Font -> IO Int
 baseSize ptr = do Font bs _ _ _ _ _ <- peek ptr
                   return (fromIntegral bs)
 
---core input auxiliary
+--core input
+--raylib consts for keys not sequential so must do this, as per raylib.h
 keyboardKeys :: [KeyboardKey]
-keyboardKeys = [Key_Apostrophe
-                ,Key_Comma
-                ,Key_Minus
-                ,Key_Period
-                ,Key_Slash
-                ,Key_Zero
-                ,Key_One
-                ,Key_Two
-                ,Key_Three
-                ,Key_Four
-                ,Key_Five
-                ,Key_Six
-                ,Key_Seven
-                ,Key_Eight
-                ,Key_Nine
-                ,Key_Semicolon
-                ,Key_Equal
-                ,Key_A
-                ,Key_B
-                ,Key_C
-                ,Key_D
-                ,Key_E
-                ,Key_F
-                ,Key_G
-                ,Key_H
-                ,Key_I
-                ,Key_J
-                ,Key_K
-                ,Key_L
-                ,Key_M
-                ,Key_N
-                ,Key_O
-                ,Key_P
-                ,Key_Q
-                ,Key_R
-                ,Key_S
-                ,Key_T
-                ,Key_U
-                ,Key_V
-                ,Key_W
-                ,Key_X
-                ,Key_Y
-                ,Key_Z
-                ,Key_Space
-                ,Key_Escape
-                ,Key_Enter
-                ,Key_Tab
-                ,Key_Backspace
-                ,Key_Insert
-                ,Key_Delete
-                ,Key_Right
-                ,Key_Left
-                ,Key_Down
-                ,Key_Up
-                ,Key_Page_Up
-                ,Key_Page_Down
-                ,Key_Home
-                ,Key_End
-                ,Key_Caps_Lock
-                ,Key_Scroll_Lock
-                ,Key_Num_Lock
-                ,Key_Print_Screen
-                ,Key_Pause
-                ,Key_F1
-                ,Key_F2
-                ,Key_F3
-                ,Key_F4
-                ,Key_F5
-                ,Key_F6
-                ,Key_F7
-                ,Key_F8
-                ,Key_F9
-                ,Key_F10
-                ,Key_F11
-                ,Key_F12
-                ,Key_Left_Shift
-                ,Key_Left_Control
-                ,Key_Left_Alt
-                ,Key_Left_Super
-                ,Key_Right_Shift
-                ,Key_Right_Control
-                ,Key_Right_Alt
-                ,Key_Right_Super
-                ,Key_Kb_Menu
-                ,Key_Left_Bracket
-                ,Key_Backslash
-                ,Key_Right_Bracket
-                ,Key_Grave
-                ,Key_Kp_0
-                ,Key_Kp_1
-                ,Key_Kp_2
-                ,Key_Kp_3
-                ,Key_Kp_4
-                ,Key_Kp_5
-                ,Key_Kp_6
-                ,Key_Kp_7
-                ,Key_Kp_8
-                ,Key_Kp_9
-                ,Key_Kp_Decimal
-                ,Key_Kp_Divide
-                ,Key_Kp_Multiply
-                ,Key_Kp_Subtract
-                ,Key_Kp_Add
-                ,Key_Kp_Enter
-                ,Key_Kp_Equal]
+keyboardKeys = [Key_Apostrophe] ++ [Key_Comma .. Key_Nine] ++ [Key_Semicolon, Key_Equal] ++
+               [Key_A .. Key_Z] ++ [Key_Space] ++ [Key_Escape .. Key_End] ++ [Key_Caps_Lock .. Key_Pause] ++
+               [Key_F1 .. Key_F12] ++ [Key_Left_Shift .. Key_Kb_Menu] ++ [Key_Left_Bracket .. Key_Right_Bracket] ++
+               [Key_Grave] ++ [Key_Kp_0 .. Key_Kp_Equal]
