@@ -83,43 +83,48 @@ extinctionLevelEvent = return ()
 
 --unload and close everything
 end ::  ArtMap -> IO ()
-end (tm, fm, sm, mm) = do sequence_ [unloadTexture (snd t) | t <- M.toList tm]
-                          sequence_ [unloadFont (snd f) | f <- M.toList fm]
-                          sequence_ [unloadSound (snd s) | s <- M.toList sm]
-                          sequence_ [unloadSound (snd s) | s <- M.toList mm]
+end (tm, fm, sm, mm) = do mapM_ (unloadTexture . snd) (M.toList tm)
+                          mapM_ (unloadFont . snd) (M.toList fm)
+                          mapM_ (unloadSound . snd) (M.toList sm)
+                          mapM_ (unloadSound . snd) (M.toList mm)
                           closeWindow
 
 loadSpriteSheets :: [SpriteSheet] -> IO (TextureMap)
-loadSpriteSheets xs = do ts <- sequence [loadTexture (artFolder ++ "spritesheets/" ++ x ++ ".png") | x <- xs]
+loadSpriteSheets xs = do ts <- mapM (loadTexture . location) xs
                          return (M.fromList (zip xs ts))
+                         where location n = artFolder ++ "spritesheets/" ++ n ++ ".png"
 
 loadFonts :: [FontFile] -> IO (FontMap)
-loadFonts xs = do ts <- sequence [loadFont (artFolder ++ "fonts/" ++ x ++ ".png") | x <- xs]
+loadFonts xs = do ts <- mapM (loadFont . location) xs
                   return (M.fromList (zip xs ts))
+                  where location n = artFolder ++ "fonts/" ++ n ++ ".png"
 
 loadSounds :: [SoundFile] -> IO (SoundMap)
-loadSounds xs = do ts <- mapM (\x -> loadSound (artFolder ++ "sounds/" ++ x ++ ".wav")) xs
+loadSounds xs = do ts <- mapM (loadSound . location) xs
                    return (M.fromList (zip xs ts))
+                   where location n = artFolder ++ "sounds/" ++ n ++ ".wav"
 
 loadMusic :: [MusicFile] -> IO (MusicMap)
-loadMusic xs = do ts <- sequence [loadSound (artFolder ++ "music/" ++ x ++ ".ogg") | x <- xs]
+loadMusic xs = do ts <- mapM (loadSound . location) xs
                   return (M.fromList (zip xs ts))
+                  where location n = artFolder ++ "music/" ++ n ++ ".ogg"
 
 --play all audio, sounds and music
 audio :: Universe a -> SoundMap -> MusicMap -> IO ()
-audio u sm mm = do sequence_ [playSound (findArt s sm) | s <- playSounds u]
+audio u sm mm = do mapM_ (playSound . findArt sm) (playSounds u)
 
 visuals :: Universe a -> TextureMap -> FontMap -> IO ()
 visuals u tm fm  =  do beginDrawing
-                       sequence_ [drawSprite s tm (Core.Universe.scaleFactor u) | s <- drawSprites u]
+                       mapM_ (\s -> drawSprite s tm sf) (drawSprites u)
                        endDrawing
+                       where sf = Core.Universe.scaleFactor u
 
 drawSprite :: Sprite -> TextureMap -> (ScaleFactor, ScaleFactor) -> IO ()
 drawSprite s tm sf = do drawTexturePro a sr dr (IO.Raylib.Vector2 0 0) 0.0 white
                         where d = dimensions s
                               sr = toRectangle (sourcePosition s) d (1.0, 1.0)
                               dr = toRectangle (targetPosition s) d sf
-                              a = findArt (spriteSheet s) tm
+                              a = findArt tm (spriteSheet s)
 --tactiles
 tactiles :: IO Tactile
 tactiles = do let ks = zip keyboardKeys [Core.Tactile.Key_Apostrophe .. Core.Tactile.Key_Kp_Equal]
@@ -128,12 +133,12 @@ tactiles = do let ks = zip keyboardKeys [Core.Tactile.Key_Apostrophe .. Core.Tac
               return $ Tactile { Core.Tactile.keysPressed = ksp, Core.Tactile.keysDown = ksd }
 
 keysTouched :: [(IO.Raylib.KeyboardKey, Core.Tactile.KeyboardKey)] -> (IO.Raylib.KeyboardKey -> IO Bool) -> IO (S.Set Core.Tactile.KeyboardKey)
-keysTouched xs f = do ks <- sequence [do kp <- f x
-                                         return (if kp then y else Core.Tactile.Key_Null) | (x, y) <- xs]
+keysTouched xs f = do ks <- mapM (\(x, y) -> do kp <- f x
+                                                return (if kp then y else Core.Tactile.Key_Null)) xs
                       return (S.fromList ks)
 
-findArt :: String -> M.Map String (Ptr a) -> Ptr a
-findArt k m = fromJust (M.lookup k m)
+findArt :: M.Map String (Ptr a) -> String -> Ptr a
+findArt m k = fromJust (M.lookup k m)
 
 --conversions
 toRectangle :: Position -> Dimensions -> (ScaleFactor, ScaleFactor) -> IO.Raylib.Rectangle
@@ -153,4 +158,3 @@ translatePosition p (ws, hs) = (fromIntegral (x p) * ws, fromIntegral (y p) * hs
 
 scaleDimensions :: Dimensions -> (ScaleFactor, ScaleFactor) -> (Float, Float)
 scaleDimensions (w, h) (ws, hs) = (fromIntegral w * ws, fromIntegral h * hs)
-
