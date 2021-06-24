@@ -7,6 +7,7 @@ import Core.Tactile
 import Core.Math
 
 data Universe a = Universe {
+    --common data
      name :: Name,
      fps :: Nat,
      resolution :: Resolution,
@@ -19,5 +20,6 @@ data Universe a = Universe {
      think :: Universe a -> Tactile -> Universe a,
      playSounds :: [SoundFile],
      drawSprites :: [Sprite],
-     gameState :: a
+     --polymorphic data
+     cosmos :: a
 }

@@ -26,10 +26,11 @@ type MusicMap = M.Map String (Ptr Sound)
 artFolder :: String
 artFolder = "art/"
 
+--build for 16:9 ration screens
 supportedResolutions :: [Resolution]
 supportedResolutions = [(425, 240), (1024, 576), (1152, 648), (1280, 720), (1600, 900), (1920, 1080)]
 
---subcreate world
+--subcreate universe
 subcreate :: Universe a -> IO ()
 subcreate u = do (u', am) <- begin u
                  exist u' am
@@ -49,7 +50,7 @@ begin u = do    let r = resolution u
                 let u' = u { Core.Universe.scaleFactor = Core.Visual.scaleFactor r r' }
                 return (u',  (sss, fs, ss, ms))
 
---adjust to best resolution
+--init window with best resolution
 initWindow :: String -> Resolution -> [Resolution] -> IO Resolution
 initWindow t o rs = do IO.Raylib.initWindow (fst o) (snd o) t
                        displayWidth <- getMonitorWidth 0
@@ -89,6 +90,7 @@ end (tm, fm, sm, mm) = do mapM_ (unloadTexture . snd) (M.toList tm)
                           mapM_ (unloadSound . snd) (M.toList mm)
                           closeWindow
 
+--load art
 loadSpriteSheets :: [SpriteSheet] -> IO (TextureMap)
 loadSpriteSheets xs = do ts <- mapM (loadTexture . location) xs
                          return (M.fromList (zip xs ts))
@@ -146,7 +148,7 @@ toRectangle p (w, h) (s1, s2) = IO.Raylib.Rectangle (realToFrac x') (realToFrac 
                                      where (w', h') = scaleDimensions (w, h) (s1, s2)
                                            (x', y') = translatePosition p (s1, s2)
 
---test font
+--font
 drawText :: Ptr Font -> String -> Position -> ScaleFactor -> IO ()
 drawText f s p sf = do bs <- baseSize f
                        drawTextEx f s (IO.Raylib.Vector2 (fromIntegral (x p)) (fromIntegral (y p))) (fromIntegral bs * sf) sf white

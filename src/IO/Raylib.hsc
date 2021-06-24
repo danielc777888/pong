@@ -1,6 +1,6 @@
+--Direct Raylib 1-1 bindings
 --TODO: Try using color defs from raylib, and not coding for it
 --TODO: Remove unecessary function bindings, eg. drawTexture as drawTextureEx is being used
---TODO: More keyboardkey enums
 --TODO: Add mouse support
 --TODO: Variadic argument support for traceLog
 module IO.Raylib (
@@ -67,7 +67,7 @@ type Width = Int
 type Height = Int
 type Title = String
 type FPS = Int
-  
+
 data Texture2D = Texture2D CInt CInt CInt CInt CInt
 instance Storable Texture2D where
   sizeOf _ = #{size Texture2D}
