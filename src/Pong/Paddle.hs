@@ -23,7 +23,7 @@ data Paddle = Paddle {
 }
 
 spriteSheet :: SpriteSheet
-spriteSheet = "paddle2"
+spriteSheet = "paddles"
 
 paddle :: Paddle
 paddle = Paddle {

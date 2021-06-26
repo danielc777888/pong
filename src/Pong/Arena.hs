@@ -21,7 +21,7 @@ data Arena = Arena {
 arena :: Arena
 arena = Arena {
         lPaddle = paddle { paddleName = "lPaddle", paddleSourcePosition = Vector {x = 3, y = 2}, paddleTargetPosition = Vector {x = 5, y = 100}},
-        rPaddle = paddle { paddleName = "rPaddle", paddleSourcePosition = Vector {x = 3, y = 2}, paddleTargetPosition = Vector {x = 410, y = 100}}
+        rPaddle = paddle { paddleName = "rPaddle", paddleSourcePosition = Vector {x = 3, y = 32}, paddleTargetPosition = Vector {x = 410, y = 100}}
 }
 
 spriteSheets :: [SpriteSheet]

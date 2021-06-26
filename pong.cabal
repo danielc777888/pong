@@ -18,7 +18,7 @@ build-type:          Simple
 extra-source-files:  CHANGELOG.md, README.md
 --extra-include-dirs:  /usr/local/include
 --extra-lib-dirs: /usr/local/lib
-                     
+
 executable pong
   main-is:             Main.hs
   other-modules:
@@ -54,7 +54,7 @@ executable pong
   --TODO:Can we just use a folder instead of specifiying each individual art asset??
   data-files:
       art/spritesheets/start.png
-      art/spritesheets/paddle.png
+      art/spritesheets/paddles.png
       art/spritesheets/ball.png
       art/spritesheets/pitch.png
       art/spritesheets/start.png
