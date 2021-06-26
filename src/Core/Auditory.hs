@@ -1,5 +1,8 @@
 
-module Core.Auditory where
+module Core.Auditory(
+    MusicFile,
+    SoundFile
+) where
 
 import Core.Existent
 

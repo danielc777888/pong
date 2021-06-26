@@ -1,8 +1,8 @@
-module Pong.Start where
+module Pong.Start(
+    startSpriteSheet
+) where
 
 import Core.Visual
 
-
-spriteSheet :: SpriteSheet
-spriteSheet = "start"
-
+startSpriteSheet :: SpriteSheet
+startSpriteSheet = "start"

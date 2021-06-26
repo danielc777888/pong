@@ -12,3 +12,11 @@ The venerable pong
 * To build execute : cabal build --extra-include-dirs=/usr/local/include --extra-lib-dirs=/usr/local/lib
 * To run execute : cabal run --extra-include-dirs=/usr/local/include --extra-lib-dirs=/usr/local/lib
 * Creating spritesheets : aseprite -b lpaddle.png rpaddle.png --sheet-type rows --sheet paddles.png
+
+## Conventions for modules/conflicts
+
+*Export public functions
+*Ensure record field names are prefixed, for game specific modules. ie. Pong
+*First just import module
+*If conflict make explicit function import OR can name be changed??
+*If still conflict use qualified import. For standard lib use 1 char(eg. M), otherwise module name(eg. Paddle)

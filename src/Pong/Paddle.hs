@@ -1,12 +1,12 @@
 module Pong.Paddle(
-    Pong.Paddle.spriteSheet,
+    paddleSpriteSheet,
     Pong.Paddle.Paddle (..),
     paddle,
     move,
-    sprite
+    paddleSprite
 ) where
 
-import qualified Data.Set as S
+import Data.Set
 
 import Core.Math
 import Core.Visual
@@ -15,37 +15,37 @@ import Core.Universe
 import Core.Tactile
 
 data Paddle = Paddle {
-    paddleName :: Name,
-    paddleSpriteSheet :: SpriteSheet,
-    paddleSourcePosition :: Vector,
-    paddleTargetPosition :: Vector,
-    paddleDimensions :: Dimensions
+    pName :: Name,
+    pSpriteSheet :: SpriteSheet,
+    pSourcePosition :: Vector,
+    pTargetPosition :: Vector,
+    pDimensions :: Dimensions
 }
 
-spriteSheet :: SpriteSheet
-spriteSheet = "paddles"
+paddleSpriteSheet :: SpriteSheet
+paddleSpriteSheet = "paddles"
 
 paddle :: Paddle
 paddle = Paddle {
-    paddleName = "paddle",
-    paddleSpriteSheet = Pong.Paddle.spriteSheet,
-    paddleSourcePosition = zeroVector,
-    paddleTargetPosition = zeroVector,
-    paddleDimensions =  (10, 26)
+    pName = "paddle",
+    pSpriteSheet = paddleSpriteSheet,
+    pSourcePosition = zeroVector,
+    pTargetPosition = zeroVector,
+    pDimensions =  (10, 26)
 }
 
-sprite :: Paddle -> Sprite
-sprite p = Sprite {
-    Core.Visual.spriteSheet = paddleSpriteSheet p,
-    sourcePosition = paddleSourcePosition p,
-    targetPosition = paddleTargetPosition p,
-    dimensions =  paddleDimensions p
+paddleSprite :: Paddle -> Sprite
+paddleSprite p = Sprite {
+    spriteSheet = pSpriteSheet p,
+    sourcePosition = pSourcePosition p,
+    targetPosition = pTargetPosition p,
+    dimensions =  pDimensions p
 }
 
 move :: Paddle -> Tactile -> (KeyboardKey, KeyboardKey) -> Paddle
 move p ts (u, d)
-    | touchedKey u ts = p { paddleTargetPosition = moveUp (paddleTargetPosition p)}
-    | touchedKey d ts = p { paddleTargetPosition = moveDown (paddleTargetPosition p)}
+    | touchedKey u ts = p { pTargetPosition = moveUp (pTargetPosition p)}
+    | touchedKey d ts = p { pTargetPosition = moveDown (pTargetPosition p)}
     | otherwise = p
 
 moveUp :: Position -> Position

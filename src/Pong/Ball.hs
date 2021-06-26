@@ -1,6 +1,8 @@
-module Pong.Ball where
+module Pong.Ball(
+    ballSpriteSheet
+) where
 
 import Core.Visual
 
-spriteSheet :: SpriteSheet
-spriteSheet = "ball"
+ballSpriteSheet :: SpriteSheet
+ballSpriteSheet = "ball"

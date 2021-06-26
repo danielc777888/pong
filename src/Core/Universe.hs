@@ -1,4 +1,6 @@
-module Core.Universe where
+module Core.Universe(
+    Universe(..)
+) where
 
 import Core.Existent
 import Core.Auditory
@@ -6,20 +8,20 @@ import Core.Visual
 import Core.Tactile
 import Core.Math
 
-data Universe a = Universe {
+data Universe u = Universe {
     --common data
-     name :: Name,
-     fps :: Nat,
-     resolution :: Resolution,
-     adaptedResolution :: Resolution,
-     scaleFactor :: (ScaleFactor, ScaleFactor),
-     spriteSheets :: [SpriteSheet],
-     fonts :: [FontFile],
-     sounds :: [SoundFile],
-     music :: [MusicFile],
-     think :: Universe a -> Tactile -> Universe a,
-     playSounds :: [SoundFile],
-     drawSprites :: [Sprite],
+     uName :: Name,
+     uFps :: Nat,
+     uResolution :: Resolution,
+     uAdaptedResolution :: Resolution,
+     uScaleFactor :: (ScaleFactor, ScaleFactor),
+     uSpriteSheets :: [SpriteSheet],
+     uFonts :: [FontFile],
+     uSounds :: [SoundFile],
+     uMusic :: [MusicFile],
+     uThink :: Universe u -> Tactile -> Universe u,
+     uPlaySounds :: [SoundFile],
+     uDrawSprites :: [Sprite],
      --polymorphic data
-     cosmos :: a
+     uUniverse :: u
 }

@@ -1,5 +1,15 @@
 
-module Core.Visual where
+module Core.Visual(
+    Resolution,
+    ScaleFactor,
+    Position,
+    Dimensions,
+    SpriteSheet,
+    FontFile,
+    Sprite(..),
+    selectResolution,
+    scaleFactor
+) where
 
 import Core.Math
 import Core.Existent
