@@ -8,7 +8,7 @@ module Pong.Paddle(
 
 import Data.Set
 
-import Core.Math
+import Core.Math (Vector, x, altx, y, alty, zeroVector)
 import Core.Visual
 import Core.Existent
 import Core.Universe
@@ -49,7 +49,9 @@ move p ts (u, d)
     | otherwise = p
 
 moveUp :: Position -> Position
-moveUp p = p { y = (y p) - 3 }
+moveUp p = alty p y'
+           where y' = (y p) - 3
 
 moveDown :: Position -> Position
-moveDown p = p { y = (y p) + 3 }
+moveDown p = alty p y'
+             where y' = (y p) + 3

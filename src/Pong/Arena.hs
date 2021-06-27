@@ -20,8 +20,8 @@ data Arena = Arena {
 
 arena :: Arena
 arena = Arena {
-        lPaddle = paddle { pName = "lPaddle", pSourcePosition = Vector {x = 3, y = 2}, pTargetPosition = Vector {x = 5, y = 100}},
-        rPaddle = paddle { pName = "rPaddle", pSourcePosition = Vector {x = 3, y = 32}, pTargetPosition = Vector {x = 410, y = 100}}
+        lPaddle = paddle { pName = "lPaddle", pSourcePosition = Vector 3 2, pTargetPosition = Vector 5 100},
+        rPaddle = paddle { pName = "rPaddle", pSourcePosition = Vector 3 32, pTargetPosition = Vector 410 100}
 }
 
 arenaSpriteSheets :: [SpriteSheet]

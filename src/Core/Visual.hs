@@ -11,8 +11,8 @@ module Core.Visual(
     scaleFactor
 ) where
 
-import Core.Math
-import Core.Existent
+import Core.Math (Nat, Vector)
+import Core.Existent (Name)
 
 type Resolution = (Nat, Nat)
 type ScaleFactor = Float

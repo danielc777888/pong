@@ -1,16 +1,17 @@
 
 module Core.Tactile(
-    Tactile(..),
+    Tactile(Tactile),
     KeyboardKey(..),
+    keysPressed, keysDown,
     touchedKey
 ) where
 
-import Data.Set
+import Data.Set (Set, member)
 
-data Tactile = Tactile {
-    keysPressed :: Set KeyboardKey,
-    keysDown :: Set KeyboardKey
-}
+type KeysPressed = Set KeyboardKey
+type KeysDown = Set KeyboardKey
+
+data Tactile = Tactile KeysPressed KeysDown
 
 data KeyboardKey = Key_Null
                 --alphanumeric
@@ -124,3 +125,9 @@ data KeyboardKey = Key_Null
 
 touchedKey :: KeyboardKey -> Tactile -> Bool
 touchedKey k t = member k (keysPressed t) || member k (keysDown t)
+
+keysPressed :: Tactile -> KeysPressed
+keysPressed (Tactile kp _)  = kp
+
+keysDown :: Tactile -> KeysDown
+keysDown (Tactile _ kd) = kd

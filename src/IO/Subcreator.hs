@@ -134,7 +134,7 @@ tactiles :: IO Tactile
 tactiles = do let ks = zip keyboardKeys [Tactile.Key_Apostrophe .. Tactile.Key_Kp_Equal]
               ksp <- keysTouched ks isKeyPressed
               ksd <- keysTouched ks isKeyDown
-              return $ Tactile { keysPressed = ksp, keysDown = ksd }
+              return $ Tactile ksp ksd
 
 keysTouched :: [(Raylib.KeyboardKey, Tactile.KeyboardKey)] -> (Raylib.KeyboardKey -> IO Bool) -> IO (Set Tactile.KeyboardKey)
 keysTouched xs f = do ks <- mapM (\(x, y) -> do kp <- f x
