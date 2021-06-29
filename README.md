@@ -3,31 +3,19 @@ The venerable pong
 
 ## Dependencies
 * The raylib c library
-* Currently haskells base/standard libs : https://downloads.haskell.org/ghc/latest/docs/html/users_guide/8.10.1-notes.html#ghc-library
+* Currently haskell base/standard libs : https://downloads.haskell.org/ghc/latest/docs/html/users_guide/8.10.1-notes.html#ghc-library
 * Main -> (IO, Pong) , Pong -> Core, IO -> Core
 
 ## Building/Running
-
-* Build/install raylib as SHARED library. https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
+* Build/install raylib as SHARED library. https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux . Commit hash : 88a6f16c9a552ebb8c39fff57cf16cfce7c88913
 * To build execute : cabal build --extra-include-dirs=/usr/local/include --extra-lib-dirs=/usr/local/lib
 * To run execute : cabal run --extra-include-dirs=/usr/local/include --extra-lib-dirs=/usr/local/lib
 * Creating spritesheets : aseprite -b lpaddle.png rpaddle.png --sheet-type rows --sheet paddles.png
+* Tested with cabal 3.2.0.0, ghc 8.10.1
 
-## Conventions for modules
-
-*Export public functions/types
-*Import module functions/types
-*If conflict , prefix with module alias
-
-## Conventions for types/data
-
-*Initially use type synonym
-*If need to use type class, or union type or recursive. Use data decleration
-*If constructor with one argument use newtype
-*It much conflicts with functions/selectors consider creating type class for overloaded function
-
-## TODO
-
-* Make functions/types explicit in imports
-* Use latest pinned raylib version.
-
+## Implementation
+* Minimal FFI bindings with raylib
+* Main game loop
+* Change resolution, display paddles
+* Move paddles, keys a/z and up/down arrows
+* Play sound , when spacebar pressed
