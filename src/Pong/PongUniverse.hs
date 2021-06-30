@@ -5,49 +5,49 @@ module Pong.PongUniverse(
 
 import Data.Set
 
-import Core.Universe
+import Core.Universe as Universe
 import Core.Tactile
-import Core.Visual
+import Core.Visual (Sprite)
 import Core.Auditory
 import Core.Math
 
-import Pong.Arena
-import Pong.Start
-import Pong.Pitch
-import Pong.Paddle
+import Pong.Arena as Arena
+import Pong.Start as Start
+import Pong.Pitch as Pitch
+import Pong.Paddle as Paddle (sprite)
 
 data PongUniverse = PongUniverse {
-    uArena :: Arena
+    arena :: Arena
 }
 
 pongUniverse :: Universe PongUniverse
 pongUniverse = Universe {
-    uName = "pong",
-    uFps = 60,
-    uResolution = (425, 240),
-    uAdaptedResolution = (425, 240),
-    uScaleFactor = (1.0, 1.0),
-    uSpriteSheets = arenaSpriteSheets ++ [startSpriteSheet],
-    uFonts = ["alagard"],
-    uSounds = ["sound"],
-    uMusic =  ["target"],
-    uThink = think,
-    uPlaySounds = [],
-    uDrawSprites = [],
-    uUniverse = PongUniverse {uArena = arena}
+    name = "pong",
+    fps = 60,
+    resolution = (425, 240),
+    adaptedResolution = (425, 240),
+    scaleFactor = (1.0, 1.0),
+    Universe.spriteSheets = Arena.spriteSheets ++ [Start.spriteSheet],
+    fonts = ["alagard"],
+    sounds = ["sound"],
+    music =  ["target"],
+    Universe.think = Pong.PongUniverse.think,
+    playSounds = [],
+    drawSprites = [],
+    universe = PongUniverse {Pong.PongUniverse.arena = Arena.arena}
 }
 
 think :: Universe PongUniverse -> Tactile -> Universe PongUniverse
-think u ts = u { uPlaySounds = soundsToPlay ts,
-                 uDrawSprites = spritesToDraw p',
-                 uUniverse = p'
+think u ts = u { playSounds = soundsToPlay ts,
+                 drawSprites = spritesToDraw p',
+                 universe = p'
                }
-                where p = uUniverse u
-                      p'= PongUniverse {uArena = arenaThink (uArena p) ts}
+                where p = universe u
+                      p'= PongUniverse {Pong.PongUniverse.arena = Arena.think (Pong.PongUniverse.arena p) ts}
 
 soundsToPlay :: Tactile -> [SoundFile]
 soundsToPlay ts = if member Key_Space (keysPressed ts) then ["sound"] else []
 
 spritesToDraw :: PongUniverse -> [Sprite]
-spritesToDraw  u = [pitchSprite, paddleSprite (lPaddle a), paddleSprite (rPaddle a)]
-                 where a = uArena u
+spritesToDraw  u = [Pitch.sprite, Paddle.sprite (lPaddle a), Paddle.sprite (rPaddle a)]
+                 where a = Pong.PongUniverse.arena u

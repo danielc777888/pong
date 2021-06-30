@@ -10,18 +10,18 @@ import Core.Math
 
 data Universe u = Universe {
     --common data
-     uName :: Name,
-     uFps :: Nat,
-     uResolution :: Resolution,
-     uAdaptedResolution :: Resolution,
-     uScaleFactor :: (ScaleFactor, ScaleFactor),
-     uSpriteSheets :: [SpriteSheet],
-     uFonts :: [FontFile],
-     uSounds :: [SoundFile],
-     uMusic :: [MusicFile],
-     uThink :: Universe u -> Tactile -> Universe u,
-     uPlaySounds :: [SoundFile],
-     uDrawSprites :: [Sprite],
+     name :: Name,
+     fps :: Nat,
+     resolution :: Resolution,
+     adaptedResolution :: Resolution,
+     scaleFactor :: (ScaleFactor, ScaleFactor),
+     spriteSheets :: [SpriteSheet],
+     fonts :: [FontFile],
+     sounds :: [SoundFile],
+     music :: [MusicFile],
+     think :: Universe u -> Tactile -> Universe u,
+     playSounds :: [SoundFile],
+     drawSprites :: [Sprite],
      --polymorphic data
-     uUniverse :: u
+     universe :: u
 }

@@ -10,13 +10,12 @@ import qualified Data.Set as S
 import Data.Maybe
 import Foreign.Ptr
 
-import IO.Raylib as Raylib
-
 import Core.Math
 import Core.Auditory
+import IO.Raylib as Raylib
 import Core.Tactile as Tactile
-import Core.Visual
-import Core.Universe
+import Core.Visual as Visual
+import Core.Universe as Universe
 
 --type synonyms
 type ArtMap = (TextureMap, FontMap, SoundMap, MusicMap)
@@ -40,16 +39,16 @@ subcreate u = do (u', am) <- begin u
 
 --begin world, init, load and setup initial state
 begin :: Universe a -> IO (Universe a, ArtMap)
-begin u = do    let r = uResolution u
-                r' <- initDisplay (uName u) r supportedResolutions
+begin u = do    let r = resolution u
+                r' <- initDisplay (name u) r supportedResolutions
                 initAudioDevice
-                sss <- loadSpriteSheets (uSpriteSheets u)
-                ss <- loadSounds (uSounds u)
-                ms <- loadMusic (uMusic u)
-                fs <- loadFonts (uFonts u)
+                sss <- loadSpriteSheets (spriteSheets u)
+                ss <- loadSounds (sounds u)
+                ms <- loadMusic (music u)
+                fs <- loadFonts (fonts u)
                 toggleFullScreen
-                setTargetFPS (uFps u)
-                let u' = u { uScaleFactor = scaleFactor r r' }
+                setTargetFPS (fps u)
+                let u' = u { Universe.scaleFactor = Visual.scaleFactor r r' }
                 return (u',  (sss, fs, ss, ms))
 
 --init display with best resolution
@@ -75,7 +74,7 @@ exist :: Universe a -> ArtMap -> IO ()
 exist u (tm, fm, sm, mm) = do   done <- windowShouldClose
                                 if not done
                                 then do ts <- tactiles
-                                        let u' = (uThink u) u ts
+                                        let u' = (think u) u ts
                                         audio u' sm mm
                                         visuals u' tm fm
                                         exist u' (tm, fm, sm, mm)
@@ -115,13 +114,13 @@ loadMusic xs = do ts <- mapM (loadSound . location) xs
 
 --play all audio, sounds and music
 audio :: Universe a -> SoundMap -> MusicMap -> IO ()
-audio u sm mm = do mapM_ (playSound . findArt sm) (uPlaySounds u)
+audio u sm mm = do mapM_ (playSound . findArt sm) (playSounds u)
 
 visuals :: Universe a -> TextureMap -> FontMap -> IO ()
 visuals u tm fm  =  do beginDrawing
-                       mapM_ (\s -> drawSprite s tm sf) (uDrawSprites u)
+                       mapM_ (\s -> drawSprite s tm sf) (drawSprites u)
                        endDrawing
-                       where sf = uScaleFactor u
+                       where sf = Universe.scaleFactor u
 
 drawSprite :: Sprite -> TextureMap -> (ScaleFactor, ScaleFactor) -> IO ()
 drawSprite s tm sf = do drawTexturePro a sr dr (Vector2 0 0) 0.0 white

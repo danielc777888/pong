@@ -13,9 +13,5 @@ The venerable pong
 * Creating spritesheets : aseprite -b lpaddle.png rpaddle.png --sheet-type rows --sheet paddles.png
 * Tested with cabal 3.2.0.0, ghc 8.10.1
 
-## Implementation
-* Minimal FFI bindings with raylib
-* Main game loop
-* Change resolution, display paddles
-* Move paddles, keys a/z and up/down arrows
-* Play sound , when spacebar pressed
+## Screenshot
+![Screenshot image](https://github.com/danielc777888/pong/raw/master/screenshot.png "Screenshot")

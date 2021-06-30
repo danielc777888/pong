@@ -1,57 +1,52 @@
 module Pong.Paddle(
-    paddleSpriteSheet,
-    Pong.Paddle.Paddle (..),
+    Paddle (..),
     paddle,
     move,
-    paddleSprite
+    sprite
 ) where
 
 import Data.Set
 
-import Core.Math (Vector, x, altx, y, alty, zeroVector)
-import Core.Visual
+import Core.Math (Vector, x, y, zeroVector)
+import Core.Visual as Visual
 import Core.Existent
-import Core.Universe
 import Core.Tactile
 
 data Paddle = Paddle {
-    pName :: Name,
-    pSpriteSheet :: SpriteSheet,
-    pSourcePosition :: Vector,
-    pTargetPosition :: Vector,
-    pDimensions :: Dimensions
+    name :: Name,
+    spriteSheet :: SpriteSheet,
+    sourcePosition :: Vector,
+    targetPosition :: Vector,
+    dimensions :: Dimensions
 }
-
-paddleSpriteSheet :: SpriteSheet
-paddleSpriteSheet = "paddles"
 
 paddle :: Paddle
 paddle = Paddle {
-    pName = "paddle",
-    pSpriteSheet = paddleSpriteSheet,
-    pSourcePosition = zeroVector,
-    pTargetPosition = zeroVector,
-    pDimensions =  (10, 26)
+    name = "paddle",
+    Pong.Paddle.spriteSheet = "paddles",
+    Pong.Paddle.sourcePosition = zeroVector,
+    Pong.Paddle.targetPosition = zeroVector,
+    Pong.Paddle.dimensions =  (10, 26)
 }
 
-paddleSprite :: Paddle -> Sprite
-paddleSprite p = Sprite {
-    spriteSheet = pSpriteSheet p,
-    sourcePosition = pSourcePosition p,
-    targetPosition = pTargetPosition p,
-    dimensions =  pDimensions p
+sprite :: Paddle -> Sprite
+sprite p = Sprite {
+    Visual.spriteSheet = Pong.Paddle.spriteSheet p,
+    Visual.sourcePosition = Pong.Paddle.sourcePosition p,
+    Visual.targetPosition = Pong.Paddle.targetPosition p,
+    Visual.dimensions =  Pong.Paddle.dimensions p
 }
 
 move :: Paddle -> Tactile -> (KeyboardKey, KeyboardKey) -> Paddle
 move p ts (u, d)
-    | touchedKey u ts = p { pTargetPosition = moveUp (pTargetPosition p)}
-    | touchedKey d ts = p { pTargetPosition = moveDown (pTargetPosition p)}
+    | touchedKey u ts = p { Pong.Paddle.targetPosition = moveUp (Pong.Paddle.targetPosition p)}
+    | touchedKey d ts = p { Pong.Paddle.targetPosition = moveDown (Pong.Paddle.targetPosition p)}
     | otherwise = p
 
 moveUp :: Position -> Position
-moveUp p = alty p y'
+moveUp p = p {y = y'}
            where y' = (y p) - 3
 
 moveDown :: Position -> Position
-moveDown p = alty p y'
+moveDown p = p {y = y'}
              where y' = (y p) + 3
