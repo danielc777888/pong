@@ -14,4 +14,4 @@ The venerable pong
 * Tested with cabal 3.2.0.0, ghc 8.10.1
 
 ## Screenshot
-![Screenshot image](https://github.com/danielc777888/pong/raw/master/screenshot.png "Screenshot")
+![Screenshot image](https://github.com/danielc777888/pong/blob/main/screenshot.png "Screenshot")
