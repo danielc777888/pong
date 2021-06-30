@@ -1,10 +1,13 @@
 # pong
-The venerable pong
+Unfinished pong game in basic Haskell
 
 ## Dependencies
 * The raylib c library
 * Currently haskell base/standard libs : https://downloads.haskell.org/ghc/latest/docs/html/users_guide/8.10.1-notes.html#ghc-library
 * Main -> (IO, Pong) , Pong -> Core, IO -> Core
+* Pong : Game specific purely functional code
+* Core : Game agnostic purely functional code
+* IO : Game agnostic IO code
 
 ## Building/Running
 * Build/install raylib as SHARED library. https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux . Commit hash : 88a6f16c9a552ebb8c39fff57cf16cfce7c88913
@@ -12,6 +15,13 @@ The venerable pong
 * To run execute : cabal run --extra-include-dirs=/usr/local/include --extra-lib-dirs=/usr/local/lib
 * Creating spritesheets : aseprite -b lpaddle.png rpaddle.png --sheet-type rows --sheet paddles.png
 * Tested with cabal 3.2.0.0, ghc 8.10.1
+
+## Implementation
+* Separated IO/Raylib code from game code
+* Main game loop
+* Scale resolution to adapt to current display
+* Display moving sprites, and static image
+* Play sound when space bar pressed
 
 ## Screenshot
 ![Screenshot image](https://github.com/danielc777888/pong/blob/main/screenshot.png "Screenshot")
