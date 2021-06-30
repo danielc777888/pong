@@ -1,6 +1,6 @@
 
-module Pong.PongUniverse(
-    pongUniverse
+module Pong.Universe(
+    Pong.Universe.universe
 ) where
 
 import Data.Set
@@ -16,12 +16,12 @@ import Pong.Start as Start
 import Pong.Pitch as Pitch
 import Pong.Paddle as Paddle (sprite)
 
-data PongUniverse = PongUniverse {
+data Universe = Universe {
     arena :: Arena
 }
 
-pongUniverse :: Universe PongUniverse
-pongUniverse = Universe {
+universe :: Universe.Universe Pong.Universe.Universe
+universe = Universe.Universe {
     name = "pong",
     fps = 60,
     resolution = (425, 240),
@@ -31,23 +31,23 @@ pongUniverse = Universe {
     fonts = ["alagard"],
     sounds = ["sound"],
     music =  ["target"],
-    Universe.think = Pong.PongUniverse.think,
+    Universe.think = Pong.Universe.think,
     playSounds = [],
     drawSprites = [],
-    universe = PongUniverse {Pong.PongUniverse.arena = Arena.arena}
+    Universe.universe = Pong.Universe.Universe {Pong.Universe.arena = Arena.arena}
 }
 
-think :: Universe PongUniverse -> Tactile -> Universe PongUniverse
+think :: Universe.Universe Pong.Universe.Universe -> Tactile -> Universe.Universe Pong.Universe.Universe
 think u ts = u { playSounds = soundsToPlay ts,
                  drawSprites = spritesToDraw p',
-                 universe = p'
+                 Universe.universe = p'
                }
-                where p = universe u
-                      p'= PongUniverse {Pong.PongUniverse.arena = Arena.think (Pong.PongUniverse.arena p) ts}
+                where p = Universe.universe u
+                      p'= Pong.Universe.Universe {Pong.Universe.arena = Arena.think (Pong.Universe.arena p) ts}
 
 soundsToPlay :: Tactile -> [SoundFile]
 soundsToPlay ts = if member Key_Space (keysPressed ts) then ["sound"] else []
 
-spritesToDraw :: PongUniverse -> [Sprite]
+spritesToDraw :: Pong.Universe.Universe -> [Sprite]
 spritesToDraw  u = [Pitch.sprite, Paddle.sprite (lPaddle a), Paddle.sprite (rPaddle a)]
-                 where a = Pong.PongUniverse.arena u
+                 where a = Pong.Universe.arena u

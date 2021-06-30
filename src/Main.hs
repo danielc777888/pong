@@ -1,7 +1,7 @@
 module Main where
 
 import IO.Subcreator
-import Pong.PongUniverse
+import Pong.Universe
 
 main :: IO ()
-main = do subcreate pongUniverse
+main = do subcreate universe
