@@ -7,46 +7,33 @@ module Pong.Paddle(
 
 import Data.Set
 
-import Core.Math (Vector, x, y, zeroVector)
-import Core.Visual as Visual
-import Core.Existent
-import Core.Tactile
+import Core.Math (Vector(Vector), zeroVector)
+import Core.Visual (SpriteSheet, Sprite(Sprite), Position, Dimensions)
+import Core.Existent (Name)
+import Core.Tactile (Tactile, KeyboardKey, touchedKey)
 
 data Paddle = Paddle {
     name :: Name,
     spriteSheet :: SpriteSheet,
-    sourcePosition :: Vector,
-    targetPosition :: Vector,
+    sourcePosition :: Position,
+    targetPosition :: Position,
     dimensions :: Dimensions
 }
 
 paddle :: Paddle
-paddle = Paddle {
-    name = "paddle",
-    Pong.Paddle.spriteSheet = "paddles",
-    Pong.Paddle.sourcePosition = zeroVector,
-    Pong.Paddle.targetPosition = zeroVector,
-    Pong.Paddle.dimensions =  (10, 26)
-}
+paddle = Paddle "paddle" "paddles" zeroVector zeroVector (10, 26)
 
 sprite :: Paddle -> Sprite
-sprite p = Sprite {
-    Visual.spriteSheet = Pong.Paddle.spriteSheet p,
-    Visual.sourcePosition = Pong.Paddle.sourcePosition p,
-    Visual.targetPosition = Pong.Paddle.targetPosition p,
-    Visual.dimensions =  Pong.Paddle.dimensions p
-}
+sprite (Paddle _ ss sp tp d) = Sprite ss sp tp d
 
 move :: Paddle -> Tactile -> (KeyboardKey, KeyboardKey) -> Paddle
 move p ts (u, d)
-    | touchedKey u ts = p { Pong.Paddle.targetPosition = moveUp (Pong.Paddle.targetPosition p)}
-    | touchedKey d ts = p { Pong.Paddle.targetPosition = moveDown (Pong.Paddle.targetPosition p)}
+    | touchedKey u ts = p { targetPosition = moveUp (targetPosition p)}
+    | touchedKey d ts = p { targetPosition = moveDown (targetPosition p)}
     | otherwise = p
 
 moveUp :: Position -> Position
-moveUp p = p {y = y'}
-           where y' = (y p) - 3
+moveUp (Vector x y) = Vector x (y - 3)
 
 moveDown :: Position -> Position
-moveDown p = p {y = y'}
-             where y' = (y p) + 3
+moveDown (Vector x y) = Vector x (y + 3)

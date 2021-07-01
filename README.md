@@ -25,3 +25,8 @@ Unfinished pong game in basic Haskell
 
 ## Screenshot
 ![Screenshot image](https://github.com/danielc777888/pong/blob/main/screenshot.png "Screenshot")
+
+## TODO
+* Use raylib pinned version. Currently 3.7.0
+* Migrate to latest ghc 9.2.*, use RecordDotSyntax extension
+* Animation of paddles

@@ -8,7 +8,7 @@ import Core.Visual
 import Core.Tactile
 import Core.Math
 
-data Universe u = Universe {
+data Universe ws = Universe {
     --common data
      name :: Name,
      fps :: Nat,
@@ -19,9 +19,9 @@ data Universe u = Universe {
      fonts :: [FontFile],
      sounds :: [SoundFile],
      music :: [MusicFile],
-     think :: Universe u -> Tactile -> Universe u,
+     think :: Universe ws -> Tactile -> Universe ws,
      playSounds :: [SoundFile],
      drawSprites :: [Sprite],
      --polymorphic data
-     universe :: u
+     worlds :: ws
 }
