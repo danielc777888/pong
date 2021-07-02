@@ -30,3 +30,10 @@ Unfinished pong game in basic Haskell
 * Use raylib pinned version. Currently 3.7.0
 * Migrate to latest ghc 9.2.*, use RecordDotSyntax extension
 * Animation of paddles
+
+## Conventions
+* Use record syntax for data types
+* Export/import module be explicit with function/types, to mimimize ambiguity
+* Dont have to use record syntax for everything.
+        -> Try first to use  pattern matching or succint data construction. If that gets unwieldy then use record syntaxt
+* Use module alias to resolve ambiguity which cannot be avoided

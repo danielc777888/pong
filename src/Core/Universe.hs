@@ -7,6 +7,7 @@ import Core.Auditory
 import Core.Visual
 import Core.Tactile
 import Core.Math
+import Core.Time
 
 data Universe ws = Universe {
     --common data
@@ -19,7 +20,7 @@ data Universe ws = Universe {
      fonts :: [FontFile],
      sounds :: [SoundFile],
      music :: [MusicFile],
-     think :: Universe ws -> Tactile -> Universe ws,
+     think :: Universe ws -> Age -> Tactile -> Universe ws,
      playSounds :: [SoundFile],
      drawSprites :: [Sprite],
      --polymorphic data

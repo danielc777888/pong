@@ -27,6 +27,7 @@ executable pong
     Core.Auditory
     Core.Tactile
     Core.Visual
+    Core.Time
     Core.Universe
     IO.Raylib
     IO.Subcreator

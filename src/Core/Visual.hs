@@ -6,13 +6,16 @@ module Core.Visual(
     Dimensions,
     SpriteSheet,
     FontFile,
+    Animation,
     Sprite(..),
+    Frame(..),
     selectResolution,
     scaleFactor
 ) where
 
 import Core.Math (Nat, Vector)
 import Core.Existent (Name)
+import Core.Time (Age)
 
 type Resolution = (Nat, Nat)
 type ScaleFactor = Float
@@ -20,12 +23,20 @@ type Position = Vector
 type Dimensions = (Nat, Nat)
 type SpriteSheet = Name
 type FontFile = Name
+type Animation = [Frame]
 
 data Sprite = Sprite {
     spriteSheet :: SpriteSheet,
     sourcePosition :: Position,
     targetPosition :: Position,
     dimensions :: Dimensions
+}
+
+data Frame = Frame {
+    number :: Nat,
+    fSourcePosition :: Position,
+    fDimensions :: Dimensions,
+    duration :: Age --in seconds
 }
 
 selectResolution :: Resolution -> [Resolution] -> Resolution

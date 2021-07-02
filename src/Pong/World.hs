@@ -8,6 +8,7 @@ import Data.Set
 import Core.Universe as Universe (Universe(..))
 import Core.Tactile
 import Core.Visual (Sprite)
+import Core.Time (Age)
 import Core.Auditory
 import Core.Math
 
@@ -16,7 +17,7 @@ import Pong.Start as Start
 import Pong.Pitch as Pitch
 import Pong.Paddle as Paddle (sprite)
 
-newtype World = World Arena
+newtype World = World {arena :: Arena}
 
 universe :: Universe World
 universe = Universe {
@@ -32,16 +33,16 @@ universe = Universe {
     Universe.think = Pong.World.think,
     playSounds = [],
     drawSprites = [],
-    worlds = World arena
+    worlds = World Arena.arena
 }
 
-think :: Universe World -> Tactile -> Universe World
-think u ts = u { playSounds = soundsToPlay ts,
-                 drawSprites = spritesToDraw p',
-                 worlds = p'
+think :: Universe World -> Age -> Tactile -> Universe World
+think u ag ts = u { playSounds = soundsToPlay ts,
+                 drawSprites = spritesToDraw w,
+                 worlds = w
                }
-                where (World a) = worlds u
-                      p'= World (Arena.think a ts)
+                where a = Pong.World.arena (worlds u)
+                      w = World (Arena.think a ag ts)
 
 soundsToPlay :: Tactile -> [SoundFile]
 soundsToPlay ts = if member Key_Space (keysPressed ts) then ["sound"] else []

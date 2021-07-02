@@ -24,6 +24,7 @@ module IO.Raylib (
  endDrawing,
  --core timing
  setTargetFPS,
+ getTime,
  --core input
  isKeyPressed,
  isKeyDown,
@@ -610,6 +611,11 @@ endDrawing = do c_endDrawing
 foreign import ccall unsafe "raylib.h SetTargetFPS" c_setTargetFPS :: CInt -> IO ()
 setTargetFPS :: FPS -> IO ()
 setTargetFPS fps = do c_setTargetFPS (fromIntegral fps)
+
+foreign import ccall unsafe "raylib.h GetTime" c_getTime :: IO CDouble
+getTime :: IO Double
+getTime = do t <- c_getTime
+             return (realToFrac t)
 
 --core input
 foreign import ccall unsafe "raylib.h IsKeyPressed" c_isKeyPressed :: CInt -> IO CBool

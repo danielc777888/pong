@@ -73,8 +73,10 @@ initDisplay t o rs = do initWindow (fst o) (snd o) t
 exist :: Universe a -> ArtMap -> IO ()
 exist u (tm, fm, sm, mm) = do   done <- windowShouldClose
                                 if not done
-                                then do ts <- tactiles
-                                        let u' = (think u) u ts
+                                then do t <- getTime
+                                        traceLog Info $ "Current time " ++ show t
+                                        ts <- tactiles
+                                        let u' = (think u) u t ts
                                         audio u' sm mm
                                         visuals u' tm fm
                                         exist u' (tm, fm, sm, mm)
