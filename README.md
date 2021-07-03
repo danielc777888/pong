@@ -16,20 +16,16 @@ Unfinished pong game in basic Haskell
 * Creating spritesheets : aseprite -b lpaddle.png rpaddle.png --sheet-type rows --sheet paddles.png
 * Tested with cabal 3.2.0.0, ghc 8.10.1
 
-## Implementation
-* Separated IO/Raylib code from game code
-* Main game loop
-* Scale resolution to adapt to current display
-* Display moving sprites, and static image
-* Play sound when space bar pressed
-
+## Design
+* First player to 5 wins
+* As time goes by game speeds up, every time ball hit paddle speed.
 ## Screenshot
 ![Screenshot image](https://github.com/danielc777888/pong/blob/main/screenshot.png "Screenshot")
 
 ## TODO
 * Use raylib pinned version. Currently 3.7.0
 * Migrate to latest ghc 9.2.*, use RecordDotSyntax extension
-* Animation of paddles
+* Animation of paddles, use world to to animate
 
 ## Conventions
 * Use record syntax for data types

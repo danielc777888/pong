@@ -90,7 +90,7 @@ extinctionLevelEvent :: IO ()
 extinctionLevelEvent = return ()
 
 time :: Double -> Float -> Float  -> Time
-time rt rdt tf = Time { realTime = rt, realDeltaTime = rdt, universeDeltaTime = tf * rdt}
+time rt rdt tf = Time { realTime = rt, realDeltaTime = rdt, universeDeltaTime = tf * rdt, universeTime = realToFrac tf * rt}
 
 --unload and close everything
 end ::  ArtMap -> IO ()

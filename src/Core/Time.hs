@@ -5,5 +5,6 @@ module Core.Time(
 data Time = Time {
     realDeltaTime :: Float,
     universeDeltaTime :: Float,
-    realTime :: Double
+    realTime :: Double,
+    universeTime :: Double
 }

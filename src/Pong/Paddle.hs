@@ -48,7 +48,7 @@ rPaddle = paddle { name = "rPaddle", sourcePosition = Vector 3 32, animation = a
 think :: Paddle -> Time -> Tactile -> Paddle
 think p t ts = a
             where m = move p ts (upKey p, downKey p) (universeDeltaTime t)
-                  a = animate m (realTime t)
+                  a = animate m (universeTime t)
 
 sprite :: Paddle -> Sprite
 sprite p = Sprite (spriteSheet p)  (fSourcePosition fr) (targetPosition p) (fDimensions fr)
