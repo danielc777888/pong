@@ -76,11 +76,11 @@ exist :: Universe a -> ArtMap -> IO ()
 exist u (tm, fm, sm, mm) = do   done <- windowShouldClose
                                 if not done
                                 then do t <- getTime
-                                        traceLog Info $ "Current time " ++ show t
+                                        --traceLog Info $ "Current time " ++ show t
                                         ft <- getFrameTime
-                                        traceLog Info $ "Current frame time " ++ show ft
+                                        --traceLog Info $ "Current frame time " ++ show ft
                                         ts <- tactiles
-                                        let u' = (think u) u  (time t ft ft) ts
+                                        let u' = (think u) u  (time t ft (timeFactor u)) ts
                                         audio u' sm mm
                                         visuals u' tm fm
                                         exist u' (tm, fm, sm, mm)
@@ -89,8 +89,8 @@ exist u (tm, fm, sm, mm) = do   done <- windowShouldClose
 extinctionLevelEvent :: IO ()
 extinctionLevelEvent = return ()
 
-time :: Double -> Float -> Float -> Time
-time rt rdt udt = Time { realTime = rt, realDeltaTime = rdt, universeDeltaTime = udt}
+time :: Double -> Float -> Float  -> Time
+time rt rdt tf = Time { realTime = rt, realDeltaTime = rdt, universeDeltaTime = tf * rdt}
 
 --unload and close everything
 end ::  ArtMap -> IO ()

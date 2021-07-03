@@ -22,7 +22,7 @@ newtype World = World {arena :: Arena}
 universe :: Universe World
 universe = Universe {
     name = "pong",
-    fps = 30,
+    fps = 24,
     resolution = (425, 240),
     adaptedResolution = (425, 240),
     scaleFactor = (1.0, 1.0),

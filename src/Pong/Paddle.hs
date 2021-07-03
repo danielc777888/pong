@@ -30,11 +30,12 @@ data Paddle = Paddle {
     upKey :: KeyboardKey,
     downKey :: KeyboardKey,
     currentFrame :: Nat,
-    currentFrameStartTime :: Double
+    currentFrameStartTime :: Double,
+    speed :: Nat
 }
 
 paddle :: Paddle
-paddle = Paddle "paddle" "paddles" zeroVector zeroVector (10, 26) [] Key_Null Key_Null 0 0
+paddle = Paddle "paddle" "paddles" zeroVector zeroVector (10, 26) [] Key_Null Key_Null 0 0 200
 
 lPaddle :: Paddle
 lPaddle = paddle { name = "lPaddle", sourcePosition = Vector 3 2, animation = an, upKey = Key_A, downKey = Key_Z }
@@ -46,7 +47,7 @@ rPaddle = paddle { name = "rPaddle", sourcePosition = Vector 3 32, animation = a
 
 think :: Paddle -> Time -> Tactile -> Paddle
 think p t ts = a
-            where m = move p ts (upKey p, downKey p) (realDeltaTime t)
+            where m = move p ts (upKey p, downKey p) (universeDeltaTime t)
                   a = animate m (realTime t)
 
 sprite :: Paddle -> Sprite
@@ -55,15 +56,15 @@ sprite p = Sprite (spriteSheet p)  (fSourcePosition fr) (targetPosition p) (fDim
 
 move :: Paddle -> Tactile -> (KeyboardKey, KeyboardKey) -> Float -> Paddle
 move p ts (u, d) dt
-    | touchedKey u ts = p { targetPosition = moveUp (targetPosition p) dt}
-    | touchedKey d ts = p { targetPosition = moveDown (targetPosition p) dt}
+    | touchedKey u ts = p { targetPosition = moveUp (targetPosition p) dt (speed p) }
+    | touchedKey d ts = p { targetPosition = moveDown (targetPosition p) dt (speed p) }
     | otherwise = p
 
-moveUp :: Position -> Float -> Position
-moveUp (Vector x y) dt = Vector x (y - round (200.0 * dt))
+moveUp :: Position -> Float -> Nat -> Position
+moveUp (Vector x y) dt s = Vector x (y - round (fromIntegral s * dt))
 
-moveDown :: Position -> Float -> Position
-moveDown (Vector x y) dt = Vector x (y + round (200.0 * dt))
+moveDown :: Position -> Float -> Nat -> Position
+moveDown (Vector x y) dt s = Vector x (y + round (fromIntegral s * dt))
 
 animate :: Paddle -> Double -> Paddle
 animate p t = if (frElapsed p t fr) then p { currentFrame = nextFr p, currentFrameStartTime = t } else p
