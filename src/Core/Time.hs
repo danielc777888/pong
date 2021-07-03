@@ -1,5 +1,9 @@
 module Core.Time(
-    Age
+    Time(..)
 ) where
 
-type Age = Double
+data Time = Time {
+    realDeltaTime :: Float,
+    universeDeltaTime :: Float,
+    realTime :: Double
+}

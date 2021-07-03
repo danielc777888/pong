@@ -12,6 +12,7 @@ import Foreign.Ptr
 
 import Core.Math
 import Core.Auditory
+import Core.Time(Time(..))
 import IO.Raylib as Raylib
 import Core.Tactile as Tactile
 import Core.Visual as Visual
@@ -30,6 +31,7 @@ artFolder = "art/"
 --build for 16:9 ration screens
 supportedResolutions :: [Resolution]
 supportedResolutions = [(425, 240), (1024, 576), (1152, 648), (1280, 720), (1600, 900), (1920, 1080)]
+--supportedResolutions = [(425, 240), (1024, 576), (1152, 648), (1280, 720), (1600, 900), (1920, 1080)]
 
 --subcreate universe
 subcreate :: Universe a -> IO ()
@@ -75,8 +77,10 @@ exist u (tm, fm, sm, mm) = do   done <- windowShouldClose
                                 if not done
                                 then do t <- getTime
                                         traceLog Info $ "Current time " ++ show t
+                                        ft <- getFrameTime
+                                        traceLog Info $ "Current frame time " ++ show ft
                                         ts <- tactiles
-                                        let u' = (think u) u t ts
+                                        let u' = (think u) u  (time t ft ft) ts
                                         audio u' sm mm
                                         visuals u' tm fm
                                         exist u' (tm, fm, sm, mm)
@@ -84,6 +88,9 @@ exist u (tm, fm, sm, mm) = do   done <- windowShouldClose
 
 extinctionLevelEvent :: IO ()
 extinctionLevelEvent = return ()
+
+time :: Double -> Float -> Float -> Time
+time rt rdt udt = Time { realTime = rt, realDeltaTime = rdt, universeDeltaTime = udt}
 
 --unload and close everything
 end ::  ArtMap -> IO ()

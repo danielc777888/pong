@@ -8,7 +8,7 @@ module Pong.Arena(
 import Core.Math
 import Core.Visual (SpriteSheet)
 import Core.Tactile
-import Core.Time (Age)
+import Core.Time (Time(..))
 
 import Pong.Ball as Ball
 import Pong.Paddle as Paddle (Paddle(..), spriteSheet, lPaddle, rPaddle, paddle, think)
@@ -28,8 +28,8 @@ arena = Arena {
 spriteSheets :: [SpriteSheet]
 spriteSheets = [Ball.spriteSheet] ++ [Paddle.spriteSheet paddle] ++ [Pitch.spriteSheet]
 
-think :: Arena -> Age -> Tactile -> Arena
-think (Arena lp rp) a ts = Arena (Paddle.think lp a ts) (Paddle.think rp a ts)
+think :: Arena -> Time -> Tactile -> Arena
+think (Arena lp rp) t ts = Arena (Paddle.think lp t ts) (Paddle.think rp t ts)
 
 
 

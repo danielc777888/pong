@@ -25,6 +25,7 @@ module IO.Raylib (
  --core timing
  setTargetFPS,
  getTime,
+ getFrameTime,
  --core input
  isKeyPressed,
  isKeyDown,
@@ -616,6 +617,11 @@ foreign import ccall unsafe "raylib.h GetTime" c_getTime :: IO CDouble
 getTime :: IO Double
 getTime = do t <- c_getTime
              return (realToFrac t)
+
+foreign import ccall unsafe "raylib.h GetFrameTime" c_getFrameTime :: IO CFloat
+getFrameTime :: IO Float
+getFrameTime = do t <- c_getFrameTime
+                  return (realToFrac t)
 
 --core input
 foreign import ccall unsafe "raylib.h IsKeyPressed" c_isKeyPressed :: CInt -> IO CBool

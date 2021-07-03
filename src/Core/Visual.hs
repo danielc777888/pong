@@ -15,7 +15,7 @@ module Core.Visual(
 
 import Core.Math (Nat, Vector)
 import Core.Existent (Name)
-import Core.Time (Age)
+--import Core.Time (Age)
 
 type Resolution = (Nat, Nat)
 type ScaleFactor = Float
@@ -36,7 +36,7 @@ data Frame = Frame {
     number :: Nat,
     fSourcePosition :: Position,
     fDimensions :: Dimensions,
-    duration :: Age --in seconds
+    duration :: Double --in seconds
 }
 
 selectResolution :: Resolution -> [Resolution] -> Resolution
