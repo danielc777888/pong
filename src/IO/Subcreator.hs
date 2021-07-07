@@ -77,6 +77,7 @@ exist u (tm, fm, sm, mm) = do   done <- windowShouldClose
                                 if not done
                                 then do t <- getTime
                                         --traceLog Info $ "Current time " ++ show t
+                                        --putStrLn ("Collision boxes " ++ show (collisionBoxes u))
                                         ft <- getFrameTime
                                         --traceLog Info $ "Current frame time " ++ show ft
                                         ts <- tactiles

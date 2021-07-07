@@ -18,18 +18,31 @@ Unfinished pong game in basic Haskell
 
 ## Design
 * First player to 5 wins
-* As time goes by game speeds up, every time ball hit paddle speed.
+* As time goes by game speeds up, every time ball hit increase paddle speed.
+
+## Self-imposed Constraints
+* Dependencies only core/std libs and raylib
+* Lazy all the way. No explicit use of strictness features
+* No explicit use of language extensions
+* Monadic code only when interacting with IO
 ## Screenshot
 ![Screenshot image](https://github.com/danielc777888/pong/blob/main/screenshot.png "Screenshot")
 
 ## TODO
 * Use raylib pinned version. Currently 3.7.0
-* Migrate to latest ghc 9.2.*, use RecordDotSyntax extension
-* Animation of paddles, use world to to animate
+* Migrate to latest ghc
+* As part of arena, please 2 walls at the side to interact with paddles
+* Randomely generate placement of new ball
+* Physics ball, paddles
+* Detect goal, and increment scores
+* Display current score
+* Save num wins for Player(A), Player(B)
+* (P)ause game, (Q)uit game with confirmation
+* Create start screen with : (S)tart, (Q)uit options, display current score tally
 
 ## Conventions
 * Use record syntax for data types
 * Export/import module be explicit with function/types, to mimimize ambiguity
 * Dont have to use record syntax for everything.
-        -> Try first to use  pattern matching or succint data construction. If that gets unwieldy then use record syntaxt
+        -> Try first to use  pattern matching or succint data construction. If that gets unwieldy then use record syntax.
 * Use module alias to resolve ambiguity which cannot be avoided

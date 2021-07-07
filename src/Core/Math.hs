@@ -6,7 +6,7 @@ module Core.Math(
 
 type Nat = Int
 
-data Vector = Vector {x :: Int, y :: Int}
+data Vector = Vector {x :: Int, y :: Int} deriving Show
 
 zeroVector :: Vector
 zeroVector = Vector 0 0

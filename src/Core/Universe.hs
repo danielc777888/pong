@@ -8,6 +8,7 @@ import Core.Visual
 import Core.Tactile
 import Core.Math
 import Core.Time (Time(..))
+import Core.Physics (CollisionBox(..))
 
 data Universe ws = Universe {
     --common data
@@ -24,6 +25,7 @@ data Universe ws = Universe {
      playSounds :: [SoundFile],
      drawSprites :: [Sprite],
      timeFactor :: Float,
+     collisionBoxes :: [CollisionBox],
      --polymorphic data
      worlds :: ws
 }

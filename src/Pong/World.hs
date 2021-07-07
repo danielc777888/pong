@@ -34,12 +34,14 @@ universe = Universe {
     playSounds = [],
     drawSprites = [],
     timeFactor = 1.0,
+    collisionBoxes = [],
     worlds = World Arena.arena
 }
 
 think :: Universe World -> Time -> Tactile -> Universe World
 think u t ts = u { playSounds = soundsToPlay ts,
                     drawSprites = spritesToDraw w,
+                    collisionBoxes = getCollisionBoxes a,
                     worlds = w }
                 where a = Pong.World.arena (worlds u)
                       w = World (Arena.think a t ts)
@@ -49,3 +51,4 @@ soundsToPlay ts = if member Key_Space (keysPressed ts) then ["sound"] else []
 
 spritesToDraw :: World -> [Sprite]
 spritesToDraw (World a) = [Pitch.sprite, Paddle.sprite (lPaddle a), Paddle.sprite (rPaddle a)]
+
