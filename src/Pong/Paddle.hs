@@ -70,11 +70,19 @@ sprite p = Sprite (spriteSheet p) (fSourcePosition fr) (targetPosition p) (fDime
 
 move :: Paddle -> CollisionBox -> CollisionBox -> Tactile -> (KeyboardKey, KeyboardKey) -> Float -> Paddle
 move p tw bw ts (u, d) dt
-    | touchedKey u ts = if collision (collisionBox mu) tw then p else mu
-    | touchedKey d ts = if collision (collisionBox md) bw then p else md
+    | touchedKey u ts = if collision (collisionBox mu) tw then moveToWall p tw else mu
+    | touchedKey d ts = if collision (collisionBox md) bw then moveToWall p bw else md
     | otherwise = p
     where mu = p { targetPosition = moveUp (targetPosition p) dt (speed p) }
           md = p { targetPosition = moveDown (targetPosition p) dt (speed p) }
+
+moveToWall :: Paddle -> CollisionBox -> Paddle
+moveToWall p cb = p {targetPosition = Vector (x tp) y'}
+                  where tp = targetPosition p
+                        above = (y (bottomLeft cb)) < (y tp)
+                        (w, h) = dimensions p
+                        y' = if above then (y (bottomLeft cb)) + 1 else (y (topRight cb)) + (-h) + (-1)
+                        --y' = if above then 0 else (240 - 26)
 
 moveUp :: Position -> Float -> Nat -> Position
 moveUp (Vector x y) dt s = Vector x (y - round (fromIntegral s * dt))

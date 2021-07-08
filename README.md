@@ -23,7 +23,7 @@ Unfinished pong game in basic Haskell
 ## Self-imposed Constraints
 * Dependencies only core/std libs and raylib
 * Lazy all the way. No explicit use of strictness features
-* No explicit use of language extensions
+* No explicit use of language extensions. Haskell2010 compliant. https://www.haskell.org/definition/haskell2010.pdf
 * Monadic code only when interacting with IO
 ## Screenshot
 ![Screenshot image](https://github.com/danielc777888/pong/blob/main/screenshot.png "Screenshot")

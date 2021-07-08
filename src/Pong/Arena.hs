@@ -27,8 +27,8 @@ arena :: Arena
 arena = Arena {
         Pong.Arena.lPaddle = Paddle.lPaddle { targetPosition = Vector 5 100 },
         Pong.Arena.rPaddle = Paddle.rPaddle { targetPosition = Vector 410 100 },
-        topWall = CollisionBox (Vector 0 (-1)) (Vector 424 (-100)),
-        bottomWall = CollisionBox (Vector 0 245) (Vector 424 240)
+        topWall = CollisionBox (Vector 0 (-1)) (Vector 425 (-6)),
+        bottomWall = CollisionBox (Vector 0 246) (Vector 425 241)
 }
 
 spriteSheets :: [SpriteSheet]
