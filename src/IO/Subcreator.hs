@@ -77,14 +77,17 @@ exist u (tm, fm, sm, mm) = do   done <- windowShouldClose
                                 if not done
                                 then do t <- getTime
                                         --traceLog Info $ "Current time " ++ show t
+                                        --traceLog Info $ "Collision boxes " ++ show (collisionBoxes u)
                                         --putStrLn ("Collision boxes " ++ show (collisionBoxes u))
                                         ft <- getFrameTime
+                                        rv <- getRandomValue 100 140
+                                        let u' = u {randomValue = rv}
                                         --traceLog Info $ "Current frame time " ++ show ft
                                         ts <- tactiles
-                                        let u' = (think u) u  (time t ft (timeFactor u)) ts
-                                        audio u' sm mm
-                                        visuals u' tm fm
-                                        exist u' (tm, fm, sm, mm)
+                                        let u'' = (think u') u' (time t ft (timeFactor u')) ts
+                                        audio u'' sm mm
+                                        visuals u'' tm fm
+                                        exist u'' (tm, fm, sm, mm)
                                 else do extinctionLevelEvent
 
 extinctionLevelEvent :: IO ()

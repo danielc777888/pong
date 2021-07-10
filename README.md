@@ -31,7 +31,6 @@ Unfinished pong game in basic Haskell
 ## TODO
 * Use raylib pinned version. Currently 3.7.0
 * Migrate to latest ghc
-* As part of arena, please 2 walls at the side to interact with paddles
 * Randomely generate placement of new ball
 * Physics ball, paddles
 * Detect goal, and increment scores

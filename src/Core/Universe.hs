@@ -26,6 +26,7 @@ data Universe ws = Universe {
      drawSprites :: [Sprite],
      timeFactor :: Float,
      collisionBoxes :: [CollisionBox],
+     randomValue :: Nat,
      --polymorphic data
      worlds :: ws
 }

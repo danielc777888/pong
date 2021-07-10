@@ -32,6 +32,7 @@ module IO.Raylib (
  --core input auxiliary
  keyboardKeys,
  --core misc
+ getRandomValue,
  traceLog,
  --textures loading
  loadTexture,
@@ -634,10 +635,16 @@ isKeyDown :: KeyboardKey -> IO Bool
 isKeyDown k = do p <- c_isKeyDown (fromIntegral (fromEnum k))
                  return (toBool p)
 --core misc
+foreign import ccall unsafe "raylib.h GetRandomValue" c_getRandomValue :: CInt -> CInt -> IO CInt
+getRandomValue :: Int -> Int -> IO Int
+getRandomValue min max = do v <- c_getRandomValue (fromIntegral min) (fromIntegral max)
+                            return (fromIntegral v)
+
 foreign import ccall unsafe "raylib.h TraceLog" c_traceLog :: CInt -> CString -> IO ()
 traceLog :: TraceLogType -> String -> IO ()
 traceLog t s = do s' <- newCString s
                   c_traceLog (fromIntegral (fromEnum t)) s'
+
 
 --texture loading
 foreign import ccall unsafe "c_raylib.h C_LoadTexture" c_loadTexture :: CString -> IO (Ptr Texture2D)

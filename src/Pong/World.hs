@@ -16,6 +16,7 @@ import Pong.Arena as Arena
 import Pong.Start as Start
 import Pong.Pitch as Pitch
 import Pong.Paddle as Paddle (sprite)
+import Pong.Ball as Ball (sprite)
 
 newtype World = World {arena :: Arena}
 
@@ -35,6 +36,7 @@ universe = Universe {
     drawSprites = [],
     timeFactor = 1.0,
     collisionBoxes = [],
+    randomValue = 0,
     worlds = World Arena.arena
 }
 
@@ -44,11 +46,12 @@ think u t ts = u { playSounds = soundsToPlay ts,
                     collisionBoxes = getCollisionBoxes a,
                     worlds = w }
                 where a = Pong.World.arena (worlds u)
-                      w = World (Arena.think a t ts)
+                      rv = (randomValue u)
+                      w = World (Arena.think a t ts rv)
 
 soundsToPlay :: Tactile -> [SoundFile]
 soundsToPlay ts = if member Key_Space (keysPressed ts) then ["sound"] else []
 
 spritesToDraw :: World -> [Sprite]
-spritesToDraw (World a) = [Pitch.sprite, Paddle.sprite (lPaddle a), Paddle.sprite (rPaddle a)]
+spritesToDraw (World a) = [Pitch.sprite, Paddle.sprite (lPaddle a), Paddle.sprite (rPaddle a), Ball.sprite (ball a)]
 
