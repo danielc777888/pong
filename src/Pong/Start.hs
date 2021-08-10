@@ -1,6 +1,7 @@
-module Pong.Start(
-    spriteSheet
-) where
+module Pong.Start
+  ( spriteSheet,
+  )
+where
 
 import Core.Visual (SpriteSheet)
 

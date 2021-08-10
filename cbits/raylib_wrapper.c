@@ -62,4 +62,3 @@ void C_PlaySound(Sound *sound)
 {
   PlaySound(*sound);
 }
-

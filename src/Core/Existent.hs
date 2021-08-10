@@ -1,6 +1,6 @@
-
-module Core.Existent(
-    Name
-) where
+module Core.Existent
+  ( Name,
+  )
+where
 
 type Name = String

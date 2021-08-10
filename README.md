@@ -30,7 +30,7 @@ Unfinished pong game in basic Haskell
 
 ## TODO
 * Use raylib pinned version. Currently 3.7.0
-* Migrate to latest ghc
+* Migrate to latest reccommended ghc with ghcup
 * Randomely generate placement of new ball
 * Physics ball, paddles
 * Detect goal, and increment scores

@@ -1,11 +1,11 @@
+module Pong.Pitch
+  ( spriteSheet,
+    sprite,
+  )
+where
 
-module Pong.Pitch(
-    spriteSheet,
-    sprite
-) where
-
-import Core.Visual as Visual (Sprite(Sprite), SpriteSheet)
-import Core.Math (Vector(Vector))
+import Core.Math (Vector (Vector))
+import Core.Visual as Visual (Sprite (Sprite), SpriteSheet)
 
 spriteSheet :: SpriteSheet
 spriteSheet = "pitch"
