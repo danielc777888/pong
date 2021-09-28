@@ -200,11 +200,11 @@ toRectangle p (w, h) (s1, s2) = Rectangle (realToFrac x') (realToFrac y') (realT
 drawText :: Ptr Font -> String -> Position -> ScaleFactor -> IO ()
 drawText f s p sf = do
   bs <- baseSize f
-  drawTextEx f s (Vector2 (fromIntegral (x p)) (fromIntegral (y p))) (fromIntegral bs * sf) sf white
+  drawTextEx f s (Vector2 (fromIntegral (vecX p)) (fromIntegral (vecY p))) (fromIntegral bs * sf) sf white
 
 --adapt positions, dimensions
 translatePosition :: Position -> (ScaleFactor, ScaleFactor) -> (Float, Float)
-translatePosition p (ws, hs) = (fromIntegral (x p) * ws, fromIntegral (y p) * hs)
+translatePosition p (ws, hs) = (fromIntegral (vecX p) * ws, fromIntegral (vecY p) * hs)
 
 scaleDimensions :: Dimensions -> (ScaleFactor, ScaleFactor) -> (Float, Float)
 scaleDimensions (w, h) (ws, hs) = (fromIntegral w * ws, fromIntegral h * hs)

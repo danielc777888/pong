@@ -1,15 +1,17 @@
 module Core.Math
   ( Nat,
-    Vector (Vector),
-    x,
-    y,
+    Vector (..),
     zeroVector,
   )
 where
 
 type Nat = Int
 
-data Vector = Vector {x :: Int, y :: Int} deriving (Show)
+data Vector = Vector
+  { vecX :: Int,
+    vecY :: Int
+  }
+  deriving (Show)
 
 zeroVector :: Vector
-zeroVector = Vector 0 0
+zeroVector = Vector {vecX = 0, vecY = 0}

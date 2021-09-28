@@ -63,9 +63,9 @@ collision :: CollisionBox -> CollisionBox -> Bool
 collision (CollisionBox v1bl v1tr) (CollisionBox v2bl v2tr) = not test
   where
     test =
-      (x v1tr < x v2bl) || (x v2tr < x v1bl)
-        || (y v1tr > y v2bl)
-        || (y v2tr > y v1bl)
+      (vecX v1tr < vecX v2bl) || (vecX v2tr < vecX v1bl)
+        || (vecY v1tr > vecY v2bl)
+        || (vecY v2tr > vecY v1bl)
 
 think :: Paddle -> CollisionBox -> CollisionBox -> Time -> Tactile -> Paddle
 think p tw bw t ts = a
@@ -88,20 +88,20 @@ move p tw bw ts (u, d) dt
     md = p {targetPosition = moveDown (targetPosition p) dt (speed p)}
 
 moveToWall :: Paddle -> CollisionBox -> Paddle
-moveToWall p cb = p {targetPosition = Vector (x tp) y'}
+moveToWall p cb = p {targetPosition = Vector {vecX = (vecX tp), vecY = y'}}
   where
     tp = targetPosition p
-    above = (y (bottomLeft cb)) < (y tp)
+    above = (vecY (bottomLeft cb)) < (vecY tp)
     (w, h) = dimensions p
-    y' = if above then (y (bottomLeft cb)) + 1 else (y (topRight cb)) + (- h) + (-1)
+    y' = if above then (vecY (bottomLeft cb)) + 1 else (vecY (topRight cb)) + (- h) + (-1)
 
 --y' = if above then 0 else (240 - 26)
 
 moveUp :: Position -> Float -> Nat -> Position
-moveUp (Vector x y) dt s = Vector x (y - round (fromIntegral s * dt))
+moveUp p dt s = Vector {vecX = (vecX p), vecY = ((vecY p) - round (fromIntegral s * dt))}
 
 moveDown :: Position -> Float -> Nat -> Position
-moveDown (Vector x y) dt s = Vector x (y + round (fromIntegral s * dt))
+moveDown p dt s = Vector {vecX = (vecX p), vecY = ((vecY p) + round (fromIntegral s * dt))}
 
 animate :: Paddle -> Double -> Paddle
 animate p t = if (frElapsed p t fr) then p {currentFrame = nextFr p, currentFrameStartTime = t} else p

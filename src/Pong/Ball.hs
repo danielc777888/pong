@@ -25,7 +25,7 @@ ball :: Ball
 ball = Ball "ball" "ball" zeroVector zeroVector (6, 6) 0 0 200
 
 think :: Ball -> Nat -> Ball
-think b rv = b {targetPosition = Vector (x tp) rv}
+think b rv = b {targetPosition = Vector {vecX = (vecX tp), vecY = rv}}
   where
     tp = targetPosition b
 
