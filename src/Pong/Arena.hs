@@ -27,7 +27,7 @@ data Arena = Arena
 arena :: Arena
 arena =
   Arena
-    { Pong.Arena.lPaddle = Paddle.lPaddle {Paddle.targetPosition = Vector 5 100},
+    { Pong.Arena.lPaddle = Paddle.lPaddle {Paddle.targetPosition = Vector {vecX = 5, vecY = 100}},
       Pong.Arena.rPaddle = Paddle.rPaddle {Paddle.targetPosition = Vector 410 100},
       topWall = CollisionBox (Vector 0 (-1)) (Vector 425 (-6)),
       bottomWall = CollisionBox (Vector 0 246) (Vector 425 241),

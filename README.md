@@ -38,10 +38,10 @@ Unfinished pong game in basic Haskell
 * Save num wins for Player(A), Player(B)
 * (P)ause game, (Q)uit game with confirmation
 * Create start screen with : (S)tart, (Q)uit options, display current score tally
+* Create game with 4 pong games on one screen
 
 ## Conventions
 * Use record syntax for data types
+* Use globally unique record fields. Unique lower case prefix of 3 chars
 * Export/import module be explicit with function/types, to mimimize ambiguity
-* Dont have to use record syntax for everything.
-        -> Try first to use  pattern matching or succint data construction. If that gets unwieldy then use record syntax.
-* Use module alias to resolve ambiguity which cannot be avoided
+* Use module alias to resolve ambiguity which cannot be avoided for functions

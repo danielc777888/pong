@@ -10,7 +10,7 @@ module Pong.Paddle
 where
 
 import Core.Existent (Name)
-import Core.Math (Nat, Vector (..), zeroVector)
+import Core.Math (Nat, Vector (..), mkVec, zeroVector)
 import Core.Physics (CollisionBox (..))
 import Core.Tactile (KeyboardKey (..), Tactile, touchedKey)
 import Core.Time (Time (..))
@@ -42,9 +42,9 @@ paddle :: Paddle
 paddle = Paddle "paddle" "paddles" zeroVector zeroVector (10, 26) [] Key_Null Key_Null 0 0 200
 
 lPaddle :: Paddle
-lPaddle = paddle {name = "lPaddle", sourcePosition = Vector 3 2, animation = an, upKey = Key_A, downKey = Key_Z}
+lPaddle = paddle {name = "lPaddle", sourcePosition = Vector {vecX = 3, vecY = 2}, animation = an, upKey = Key_A, downKey = Key_Z}
   where
-    an = [Frame 0 (Vector 3 2) (10, 26) 0.1, Frame 1 (Vector 19 2) (10, 26) 0.2, Frame 2 (Vector 35 2) (10, 26) 0.2, Frame 3 (Vector 51 2) (10, 26) 0.2]
+      an = [Frame 0 Vector{vecX = 3, vecY = 2} (10, 26) 0.1, Frame 1 Vector{vecX = 19, vecY = 2} (10, 26) 0.2, Frame 2 Vector{vecX = 35, vecY = 2} (10, 26) 0.2, Frame 3 Vector{vecX = 51, vecY = 2} (10, 26) 0.2]
 
 rPaddle :: Paddle
 rPaddle = paddle {name = "rPaddle", sourcePosition = Vector 3 32, animation = an, upKey = Key_Up, downKey = Key_Down}
@@ -88,7 +88,7 @@ move p tw bw ts (u, d) dt
     md = p {targetPosition = moveDown (targetPosition p) dt (speed p)}
 
 moveToWall :: Paddle -> CollisionBox -> Paddle
-moveToWall p cb = p {targetPosition = Vector {vecX = (vecX tp), vecY = y'}}
+moveToWall p cb = p {targetPosition = Vector {vecX = (vecX tp), vecY = y'}} --mkVec (vecX tp) y'
   where
     tp = targetPosition p
     above = (vecY (bottomLeft cb)) < (vecY tp)

@@ -1,6 +1,7 @@
 module Core.Math
   ( Nat,
     Vector (..),
+    mkVec,
     zeroVector,
   )
 where
@@ -14,4 +15,7 @@ data Vector = Vector
   deriving (Show)
 
 zeroVector :: Vector
-zeroVector = Vector {vecX = 0, vecY = 0}
+zeroVector = mkVec 0 0
+
+mkVec :: Int -> Int -> Vector
+mkVec x y = Vector {vecX = x, vecY = y}
