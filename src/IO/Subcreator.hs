@@ -6,17 +6,17 @@ where
 
 import Core.Auditory
 import Core.Math
-import Core.Tactile as Tactile
+import Core.Tactile
 import Core.Time (Time (..))
-import Core.Universe as Universe
-import Core.Visual as Visual
+import Core.Universe
+import Core.Visual
 import Data.Map (Map, toList)
 import qualified Data.Map as M
 import Data.Maybe
 import Data.Set (Set)
 import qualified Data.Set as S
 import Foreign.Ptr
-import IO.Raylib as Raylib
+import IO.Raylib
 
 --type synonyms
 type ArtMap = (TextureMap, FontMap, SoundMap, MusicMap)
@@ -51,13 +51,13 @@ begin u = do
   let r = resolution u
   r' <- initDisplay (name u) r supportedResolutions
   initAudioDevice
-  sss <- loadSpriteSheets (spriteSheets u)
+  sss <- loadSpriteSheets (uniSpriteSheets u)
   ss <- loadSounds (sounds u)
   ms <- loadMusic (music u)
   fs <- loadFonts (fonts u)
   toggleFullScreen
   setTargetFPS (fps u)
-  let u' = u {Universe.scaleFactor = Visual.scaleFactor r r'}
+  let u' = u {uniScaleFactor = scaleFactor r r'}
   return (u', (sss, fs, ss, ms))
 
 --init display with best resolution
@@ -97,7 +97,7 @@ exist u (tm, fm, sm, mm) = do
       let u' = u {randomValue = rv}
       --traceLog Info $ "Current frame time " ++ show ft
       ts <- tactiles
-      let u'' = (think u') u' (time t ft (timeFactor u')) ts
+      let u'' = (uniThink u') u' (time t ft (timeFactor u')) ts
       audio u'' sm mm
       visuals u'' tm fm
       exist u'' (tm, fm, sm, mm)
@@ -157,7 +157,7 @@ visuals u tm fm = do
   mapM_ (\s -> drawSprite s tm sf) (drawSprites u)
   endDrawing
   where
-    sf = Universe.scaleFactor u
+    sf = uniScaleFactor u
 
 drawSprite :: Sprite -> TextureMap -> (ScaleFactor, ScaleFactor) -> IO ()
 drawSprite s tm sf = do drawTexturePro a sr dr (Vector2 0 0) 0.0 white
@@ -170,18 +170,18 @@ drawSprite s tm sf = do drawTexturePro a sr dr (Vector2 0 0) 0.0 white
 --tactiles
 tactiles :: IO Tactile
 tactiles = do
-  let ks = zip keyboardKeys [Tactile.Key_Apostrophe .. Tactile.Key_Kp_Equal]
+  let ks = zip keyboardKeys [Key_Apostrophe .. Key_Kp_Equal]
   ksp <- keysTouched ks isKeyPressed
   ksd <- keysTouched ks isKeyDown
   return $ Tactile ksp ksd
 
-keysTouched :: [(Raylib.KeyboardKey, Tactile.KeyboardKey)] -> (Raylib.KeyboardKey -> IO Bool) -> IO (Set Tactile.KeyboardKey)
+keysTouched :: [(RayKeyboardKey, KeyboardKey)] -> (RayKeyboardKey -> IO Bool) -> IO (Set KeyboardKey)
 keysTouched xs f = do
   ks <-
     mapM
       ( \(x, y) -> do
           kp <- f x
-          return (if kp then y else Tactile.Key_Null)
+          return (if kp then y else Key_Null)
       )
       xs
   return (S.fromList ks)

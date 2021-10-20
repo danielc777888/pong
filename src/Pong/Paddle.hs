@@ -1,10 +1,10 @@
 module Pong.Paddle
   ( Paddle (..),
     paddle,
-    lPaddle,
-    rPaddle,
-    think,
-    sprite,
+    pdlLPaddle,
+    pdlRPaddle,
+    pdlThink,
+    pdlSprite,
     collisionBox,
   )
 where
@@ -26,9 +26,9 @@ import Data.Set
 
 data Paddle = Paddle
   { name :: Name,
-    spriteSheet :: SpriteSheet,
+    pdlSpriteSheet :: SpriteSheet,
     sourcePosition :: Position,
-    targetPosition :: Position,
+    pdlTargetPosition :: Position,
     dimensions :: Dimensions,
     animation :: Animation,
     upKey :: KeyboardKey,
@@ -41,20 +41,20 @@ data Paddle = Paddle
 paddle :: Paddle
 paddle = Paddle "paddle" "paddles" zeroVector zeroVector (10, 26) [] Key_Null Key_Null 0 0 200
 
-lPaddle :: Paddle
-lPaddle = paddle {name = "lPaddle", sourcePosition = Vector {vecX = 3, vecY = 2}, animation = an, upKey = Key_A, downKey = Key_Z}
+pdlLPaddle :: Paddle
+pdlLPaddle = paddle {name = "lPaddle", sourcePosition = Vector {vecX = 3, vecY = 2}, animation = an, upKey = Key_A, downKey = Key_Z}
   where
-      an = [Frame 0 Vector{vecX = 3, vecY = 2} (10, 26) 0.1, Frame 1 Vector{vecX = 19, vecY = 2} (10, 26) 0.2, Frame 2 Vector{vecX = 35, vecY = 2} (10, 26) 0.2, Frame 3 Vector{vecX = 51, vecY = 2} (10, 26) 0.2]
+    an = [Frame 0 Vector {vecX = 3, vecY = 2} (10, 26) 0.1, Frame 1 Vector {vecX = 19, vecY = 2} (10, 26) 0.2, Frame 2 Vector {vecX = 35, vecY = 2} (10, 26) 0.2, Frame 3 Vector {vecX = 51, vecY = 2} (10, 26) 0.2]
 
-rPaddle :: Paddle
-rPaddle = paddle {name = "rPaddle", sourcePosition = Vector 3 32, animation = an, upKey = Key_Up, downKey = Key_Down}
+pdlRPaddle :: Paddle
+pdlRPaddle = paddle {name = "rPaddle", sourcePosition = Vector 3 32, animation = an, upKey = Key_Up, downKey = Key_Down}
   where
     an = [Frame 0 (Vector 3 32) (10, 26) 0.1, Frame 1 (Vector 19 32) (10, 26) 0.2, Frame 2 (Vector 35 32) (10, 26) 0.2, Frame 3 (Vector 51 32) (10, 26) 0.2]
 
 collisionBox :: Paddle -> CollisionBox
 collisionBox p = CollisionBox bl tr
   where
-    (Vector spx spy) = targetPosition p
+    (Vector spx spy) = pdlTargetPosition p
     (w, h) = dimensions p
     bl = Vector spx (spy + h)
     tr = Vector (spx + w) spy
@@ -67,14 +67,14 @@ collision (CollisionBox v1bl v1tr) (CollisionBox v2bl v2tr) = not test
         || (vecY v1tr > vecY v2bl)
         || (vecY v2tr > vecY v1bl)
 
-think :: Paddle -> CollisionBox -> CollisionBox -> Time -> Tactile -> Paddle
-think p tw bw t ts = a
+pdlThink :: Paddle -> CollisionBox -> CollisionBox -> Time -> Tactile -> Paddle
+pdlThink p tw bw t ts = a
   where
     m = move p tw bw ts (upKey p, downKey p) (universeDeltaTime t)
     a = animate m (universeTime t)
 
-sprite :: Paddle -> Sprite
-sprite p = Sprite (spriteSheet p) (fSourcePosition fr) (targetPosition p) (fDimensions fr)
+pdlSprite :: Paddle -> Sprite
+pdlSprite p = Sprite (pdlSpriteSheet p) (frmSourcePosition fr) (pdlTargetPosition p) (frmDimensions fr)
   where
     fr = (animation p) !! (currentFrame p)
 
@@ -84,13 +84,13 @@ move p tw bw ts (u, d) dt
   | touchedKey d ts = if collision (collisionBox md) bw then moveToWall p bw else md
   | otherwise = p
   where
-    mu = p {targetPosition = moveUp (targetPosition p) dt (speed p)}
-    md = p {targetPosition = moveDown (targetPosition p) dt (speed p)}
+    mu = p {pdlTargetPosition = moveUp (pdlTargetPosition p) dt (speed p)}
+    md = p {pdlTargetPosition = moveDown (pdlTargetPosition p) dt (speed p)}
 
 moveToWall :: Paddle -> CollisionBox -> Paddle
-moveToWall p cb = p {targetPosition = Vector {vecX = (vecX tp), vecY = y'}} --mkVec (vecX tp) y'
+moveToWall p cb = p {pdlTargetPosition = Vector {vecX = (vecX tp), vecY = y'}} --mkVec (vecX tp) y'
   where
-    tp = targetPosition p
+    tp = pdlTargetPosition p
     above = (vecY (bottomLeft cb)) < (vecY tp)
     (w, h) = dimensions p
     y' = if above then (vecY (bottomLeft cb)) + 1 else (vecY (topRight cb)) + (- h) + (-1)

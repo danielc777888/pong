@@ -1,8 +1,8 @@
 module Pong.Ball
   ( Ball (..),
-    ball,
-    think,
-    sprite,
+    balBall,
+    balThink,
+    balSprite,
   )
 where
 
@@ -12,22 +12,22 @@ import Core.Visual (Dimensions, Position, Sprite (Sprite), SpriteSheet)
 
 data Ball = Ball
   { name :: Name,
-    spriteSheet :: SpriteSheet,
+    balSpriteSheet :: SpriteSheet,
     sourcePosition :: Position,
-    targetPosition :: Position,
+    balTargetPosition :: Position,
     dimensions :: Dimensions,
     currentFrame :: Nat,
     currentFrameStartTime :: Double,
     speed :: Nat
   }
 
-ball :: Ball
-ball = Ball "ball" "ball" zeroVector zeroVector (6, 6) 0 0 200
+balBall :: Ball
+balBall = Ball "ball" "ball" zeroVector zeroVector (6, 6) 0 0 200
 
-think :: Ball -> Nat -> Ball
-think b rv = b {targetPosition = Vector {vecX = (vecX tp), vecY = rv}}
+balThink :: Ball -> Nat -> Ball
+balThink b rv = b {balTargetPosition = Vector {vecX = (vecX tp), vecY = rv}}
   where
-    tp = targetPosition b
+    tp = balTargetPosition b
 
-sprite :: Ball -> Sprite
-sprite b = Sprite (spriteSheet b) (sourcePosition b) (targetPosition b) (dimensions b)
+balSprite :: Ball -> Sprite
+balSprite b = Sprite (balSpriteSheet b) (sourcePosition b) (balTargetPosition b) (dimensions b)

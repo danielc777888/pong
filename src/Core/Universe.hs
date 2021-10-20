@@ -3,13 +3,13 @@ module Core.Universe
   )
 where
 
-import Core.Auditory
-import Core.Existent
-import Core.Math
-import Core.Physics (CollisionBox (..))
-import Core.Tactile
-import Core.Time (Time (..))
-import Core.Visual
+import Core.Auditory (MusicFile, SoundFile)
+import Core.Existent (Name)
+import Core.Math (Nat)
+import Core.Physics (CollisionBox)
+import Core.Tactile (Tactile)
+import Core.Time (Time)
+import Core.Visual (FontFile, Resolution, ScaleFactor, Sprite, SpriteSheet)
 
 data Universe ws = Universe
   { --common data
@@ -17,12 +17,12 @@ data Universe ws = Universe
     fps :: Nat,
     resolution :: Resolution,
     adaptedResolution :: Resolution,
-    scaleFactor :: (ScaleFactor, ScaleFactor),
-    spriteSheets :: [SpriteSheet],
+    uniScaleFactor :: (ScaleFactor, ScaleFactor),
+    uniSpriteSheets :: [SpriteSheet],
     fonts :: [FontFile],
     sounds :: [SoundFile],
     music :: [MusicFile],
-    think :: Universe ws -> Time -> Tactile -> Universe ws,
+    uniThink :: Universe ws -> Time -> Tactile -> Universe ws,
     playSounds :: [SoundFile],
     drawSprites :: [Sprite],
     timeFactor :: Float,

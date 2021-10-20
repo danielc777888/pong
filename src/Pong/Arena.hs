@@ -1,8 +1,8 @@
 module Pong.Arena
   ( Arena (..),
-    spriteSheets,
+    arnSpriteSheets,
     arena,
-    Pong.Arena.think,
+    arnThink,
     getCollisionBoxes,
   )
 where
@@ -12,9 +12,9 @@ import Core.Physics (CollisionBox (..))
 import Core.Tactile
 import Core.Time (Time (..))
 import Core.Visual (SpriteSheet)
-import Pong.Ball as Ball
-import Pong.Paddle as Paddle (Paddle (..), collisionBox, lPaddle, paddle, rPaddle, spriteSheet, think)
-import Pong.Pitch as Pitch
+import Pong.Ball
+import Pong.Paddle (Paddle (..), collisionBox, paddle, pdlLPaddle, pdlRPaddle, pdlSpriteSheet, pdlThink)
+import Pong.Pitch
 
 data Arena = Arena
   { lPaddle :: Paddle,
@@ -27,18 +27,18 @@ data Arena = Arena
 arena :: Arena
 arena =
   Arena
-    { Pong.Arena.lPaddle = Paddle.lPaddle {Paddle.targetPosition = Vector {vecX = 5, vecY = 100}},
-      Pong.Arena.rPaddle = Paddle.rPaddle {Paddle.targetPosition = Vector 410 100},
+    { Pong.Arena.lPaddle = pdlLPaddle {pdlTargetPosition = Vector {vecX = 5, vecY = 100}},
+      Pong.Arena.rPaddle = pdlRPaddle {pdlTargetPosition = Vector 410 100},
       topWall = CollisionBox (Vector 0 (-1)) (Vector 425 (-6)),
       bottomWall = CollisionBox (Vector 0 246) (Vector 425 241),
-      Pong.Arena.ball = Ball.ball {Ball.targetPosition = Vector 212 120}
+      Pong.Arena.ball = balBall {balTargetPosition = Vector 212 120}
     }
 
-spriteSheets :: [SpriteSheet]
-spriteSheets = [Ball.spriteSheet Ball.ball] ++ [Paddle.spriteSheet paddle] ++ [Pitch.spriteSheet]
+arnSpriteSheets :: [SpriteSheet]
+arnSpriteSheets = [balSpriteSheet balBall] ++ [pdlSpriteSheet paddle] ++ [pthSpriteSheet]
 
-think :: Arena -> Time -> Tactile -> Nat -> Arena
-think (Arena lp rp tw bw b) t ts rv = Arena (Paddle.think lp tw bw t ts) (Paddle.think rp tw bw t ts) tw bw (Ball.think b rv)
+arnThink :: Arena -> Time -> Tactile -> Nat -> Arena
+arnThink (Arena lp rp tw bw b) t ts rv = Arena (pdlThink lp tw bw t ts) (pdlThink rp tw bw t ts) tw bw (balThink b rv)
 
 getCollisionBoxes :: Arena -> [CollisionBox]
 getCollisionBoxes (Arena lp rp tw bw b) = [tw, bw, collisionBox lp, collisionBox rp]

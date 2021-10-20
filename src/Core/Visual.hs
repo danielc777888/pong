@@ -16,8 +16,6 @@ where
 import Core.Existent (Name)
 import Core.Math (Nat, Vector)
 
---import Core.Time (Age)
-
 type Resolution = (Nat, Nat)
 
 type ScaleFactor = Float
@@ -41,8 +39,8 @@ data Sprite = Sprite
 
 data Frame = Frame
   { number :: Nat,
-    fSourcePosition :: Position,
-    fDimensions :: Dimensions,
+    frmSourcePosition :: Position,
+    frmDimensions :: Dimensions,
     duration :: Double --in seconds
   }
 

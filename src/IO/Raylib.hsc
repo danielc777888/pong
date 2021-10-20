@@ -9,7 +9,7 @@ module IO.Raylib (
  Sound,
  Vector2 (Vector2),
  Color,
- KeyboardKey (..),
+ RayKeyboardKey (..),
  TraceLogType (..),
  Rectangle (Rectangle),
  --core window
@@ -105,7 +105,7 @@ instance Storable Color where
     (#poke Color, b) ptr b'
     (#poke Color, a) ptr a'
 
-data KeyboardKey = Key_Apostrophe
+data RayKeyboardKey = Ray_Key_Apostrophe
                 | Key_Comma
                 | Key_Minus
                 | Key_Period
@@ -209,9 +209,9 @@ data KeyboardKey = Key_Apostrophe
                 | Key_Kp_Subtract
                 | Key_Kp_Add
                 | Key_Kp_Enter
-                | Key_Kp_Equal deriving (Show, Eq)
-instance Enum KeyboardKey where
-  fromEnum Key_Apostrophe = #{const KEY_APOSTROPHE}
+                | Ray_Key_Kp_Equal deriving (Show, Eq)
+instance Enum RayKeyboardKey where
+  fromEnum Ray_Key_Apostrophe = #{const KEY_APOSTROPHE}
   fromEnum Key_Comma = #{const KEY_COMMA}
   fromEnum Key_Minus = #{const KEY_MINUS}
   fromEnum Key_Period = #{const KEY_PERIOD}
@@ -315,8 +315,8 @@ instance Enum KeyboardKey where
   fromEnum Key_Kp_Subtract = #{const KEY_KP_SUBTRACT}
   fromEnum Key_Kp_Add = #{const KEY_KP_ADD}
   fromEnum Key_Kp_Enter = #{const KEY_KP_ENTER}
-  fromEnum Key_Kp_Equal = #{const KEY_KP_EQUAL}
-  toEnum #{const KEY_APOSTROPHE} = Key_Apostrophe
+  fromEnum Ray_Key_Kp_Equal = #{const KEY_KP_EQUAL}
+  toEnum #{const KEY_APOSTROPHE} = Ray_Key_Apostrophe
   toEnum #{const KEY_COMMA} = Key_Comma
   toEnum #{const KEY_MINUS} = Key_Minus
   toEnum #{const KEY_PERIOD} = Key_Period
@@ -420,7 +420,7 @@ instance Enum KeyboardKey where
   toEnum #{const KEY_KP_SUBTRACT} = Key_Kp_Subtract
   toEnum #{const KEY_KP_ADD} = Key_Kp_Add
   toEnum #{const KEY_KP_ENTER} = Key_Kp_Enter
-  toEnum #{const KEY_KP_EQUAL} = Key_Kp_Equal
+  toEnum #{const KEY_KP_EQUAL} = Ray_Key_Kp_Equal
   toEnum _ = error "no such value for KeyboardKey"
 
 data AudioStream = AudioStream (Ptr CInt) CUInt CUInt CUInt
@@ -626,12 +626,12 @@ getFrameTime = do t <- c_getFrameTime
 
 --core input
 foreign import ccall unsafe "raylib.h IsKeyPressed" c_isKeyPressed :: CInt -> IO CBool
-isKeyPressed :: KeyboardKey -> IO Bool
+isKeyPressed :: RayKeyboardKey -> IO Bool
 isKeyPressed k = do p <- c_isKeyPressed (fromIntegral (fromEnum k))
                     return (toBool p)
 
 foreign import ccall unsafe "raylib.h IsKeyDown" c_isKeyDown :: CInt -> IO CBool
-isKeyDown :: KeyboardKey -> IO Bool
+isKeyDown :: RayKeyboardKey -> IO Bool
 isKeyDown k = do p <- c_isKeyDown (fromIntegral (fromEnum k))
                  return (toBool p)
 --core misc
@@ -715,8 +715,8 @@ baseSize ptr = do Font bs _ _ _ _ _ <- peek ptr
 
 --core input
 --raylib consts for keys not sequential so must do this, as per raylib.h
-keyboardKeys :: [KeyboardKey]
-keyboardKeys = [Key_Apostrophe] ++ [Key_Comma .. Key_Nine] ++ [Key_Semicolon, Key_Equal] ++
+keyboardKeys :: [RayKeyboardKey]
+keyboardKeys = [Ray_Key_Apostrophe] ++ [Key_Comma .. Key_Nine] ++ [Key_Semicolon, Key_Equal] ++
                [Key_A .. Key_Z] ++ [Key_Space] ++ [Key_Escape .. Key_End] ++ [Key_Caps_Lock .. Key_Pause] ++
                [Key_F1 .. Key_F12] ++ [Key_Left_Shift .. Key_Kb_Menu] ++ [Key_Left_Bracket .. Key_Right_Bracket] ++
-               [Key_Grave] ++ [Key_Kp_0 .. Key_Kp_Equal]
+               [Key_Grave] ++ [Key_Kp_0 .. Ray_Key_Kp_Equal]

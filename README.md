@@ -25,12 +25,16 @@ Unfinished pong game in basic Haskell
 * Lazy all the way. No explicit use of strictness features
 * No explicit use of language extensions. Haskell2010 compliant. https://www.haskell.org/definition/haskell2010.pdf
 * Monadic code only when interacting with IO
+
 ## Screenshot
 ![Screenshot image](https://github.com/danielc777888/pong/blob/main/screenshot.png "Screenshot")
 
 ## TODO
 * Use raylib pinned version. Currently 3.7.0
 * Migrate to latest reccommended ghc with ghcup
+* Remove use of all non core lib import aliases
+* Import explicit functions, data
+* Prefix Raylib Keys with Ray to prevent conflicts
 * Randomely generate placement of new ball
 * Physics ball, paddles
 * Detect goal, and increment scores
@@ -42,6 +46,6 @@ Unfinished pong game in basic Haskell
 
 ## Conventions
 * Use record syntax for data types
-* Use globally unique record fields. Unique lower case prefix of 3 chars
+* When conflict with function name, prefix with globally unique 3 lower case chars
 * Export/import module be explicit with function/types, to mimimize ambiguity
-* Use module alias to resolve ambiguity which cannot be avoided for functions
+* Use import qualified for std libs/core conflicts

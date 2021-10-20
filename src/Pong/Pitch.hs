@@ -1,14 +1,14 @@
 module Pong.Pitch
-  ( spriteSheet,
-    sprite,
+  ( pthSpriteSheet,
+    pthSprite,
   )
 where
 
 import Core.Math (Vector (Vector))
-import Core.Visual as Visual (Sprite (Sprite), SpriteSheet)
+import Core.Visual (Sprite (Sprite), SpriteSheet)
 
-spriteSheet :: SpriteSheet
-spriteSheet = "pitch"
+pthSpriteSheet :: SpriteSheet
+pthSpriteSheet = "pitch"
 
-sprite :: Sprite
-sprite = Sprite spriteSheet (Vector 0 0) (Vector 0 0) (425, 240)
+pthSprite :: Sprite
+pthSprite = Sprite pthSpriteSheet (Vector 0 0) (Vector 0 0) (425, 240)

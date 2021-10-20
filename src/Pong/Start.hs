@@ -1,9 +1,9 @@
 module Pong.Start
-  ( spriteSheet,
+  ( strSpriteSheet,
   )
 where
 
 import Core.Visual (SpriteSheet)
 
-spriteSheet :: SpriteSheet
-spriteSheet = "start"
+strSpriteSheet :: SpriteSheet
+strSpriteSheet = "start"
