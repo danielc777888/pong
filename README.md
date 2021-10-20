@@ -35,7 +35,7 @@ Unfinished pong game in basic Haskell
 * Remove use of all non core lib import aliases
 * Import explicit functions, data
 * Prefix Raylib Keys with Ray to prevent conflicts
-* Randomely generate placement of new ball
+* Randomely generate placement of new ball, maybe look at what Haskell provides (infinite random numbers)
 * Physics ball, paddles
 * Detect goal, and increment scores
 * Display current score
