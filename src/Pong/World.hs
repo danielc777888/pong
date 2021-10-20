@@ -9,7 +9,7 @@ import Core.Tactile
 import Core.Time (Time (..))
 import Core.Universe
 import Core.Visual (Sprite)
-import Data.Set
+import qualified Data.Set as S
 import Pong.Arena
 import Pong.Ball (balSprite)
 import Pong.Paddle (pdlSprite)
@@ -35,7 +35,7 @@ universe =
       drawSprites = [],
       timeFactor = 1.0,
       collisionBoxes = [],
-      randomValue = 0,
+      randomValues = [((50, 190), 0)],
       worlds = World arena
     }
 
@@ -45,15 +45,17 @@ think u t ts =
     { playSounds = soundsToPlay ts,
       drawSprites = spritesToDraw w,
       collisionBoxes = getCollisionBoxes a,
-      worlds = w
+      worlds = w,
+      randomValues = []
     }
   where
     a = Pong.World.wldArena (worlds u)
-    rv = (randomValue u)
+    rvs = randomValues u
+    rv = if null rvs then Nothing else Just (snd ((randomValues u) !! 0))
     w = World (arnThink a t ts rv)
 
 soundsToPlay :: Tactile -> [SoundFile]
-soundsToPlay ts = if member Key_Space (keysPressed ts) then ["sound"] else []
+soundsToPlay ts = if S.member Key_Space (keysPressed ts) then ["sound"] else []
 
 spritesToDraw :: World -> [Sprite]
 spritesToDraw (World a) = [pthSprite, pdlSprite (lPaddle a), pdlSprite (rPaddle a), balSprite (ball a)]

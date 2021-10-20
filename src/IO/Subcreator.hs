@@ -93,8 +93,14 @@ exist u (tm, fm, sm, mm) = do
       --traceLog Info $ "Collision boxes " ++ show (collisionBoxes u)
       --putStrLn ("Collision boxes " ++ show (collisionBoxes u))
       ft <- getFrameTime
-      rv <- getRandomValue 100 140
-      let u' = u {randomValue = rv}
+      rvs <-
+        mapM
+          ( \((x, y), _) -> do
+              rv <- getRandomValue x y
+              return ((x, y), rv)
+          )
+          (randomValues u)
+      let u' = u {randomValues = rvs}
       --traceLog Info $ "Current frame time " ++ show ft
       ts <- tactiles
       let u'' = (uniThink u') u' (time t ft (timeFactor u')) ts

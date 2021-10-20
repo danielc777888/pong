@@ -12,6 +12,7 @@ import Core.Physics (CollisionBox (..))
 import Core.Tactile
 import Core.Time (Time (..))
 import Core.Visual (SpriteSheet)
+import Data.Maybe
 import Pong.Ball
 import Pong.Paddle (Paddle (..), collisionBox, paddle, pdlLPaddle, pdlRPaddle, pdlSpriteSheet, pdlThink)
 import Pong.Pitch
@@ -37,7 +38,7 @@ arena =
 arnSpriteSheets :: [SpriteSheet]
 arnSpriteSheets = [balSpriteSheet balBall] ++ [pdlSpriteSheet paddle] ++ [pthSpriteSheet]
 
-arnThink :: Arena -> Time -> Tactile -> Nat -> Arena
+arnThink :: Arena -> Time -> Tactile -> Maybe Nat -> Arena
 arnThink (Arena lp rp tw bw b) t ts rv = Arena (pdlThink lp tw bw t ts) (pdlThink rp tw bw t ts) tw bw (balThink b rv)
 
 getCollisionBoxes :: Arena -> [CollisionBox]
