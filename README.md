@@ -18,12 +18,3 @@ Unfinished pong game in basic Haskell
 
 ## Screenshot
 ![Screenshot image](https://github.com/danielc777888/pong/blob/main/screenshot.png "Screenshot")
-
-## TODO
-* Use raylib pinned version. Currently 3.7.0
-* Migrate to latest reccommended ghc with ghcup
-* Randomely generate placement of new ball, maybe look at what Haskell provides (infinite random numbers)
-* Physics ball, paddles
-* Detect goal, and increment scores
-* Display current score
-
